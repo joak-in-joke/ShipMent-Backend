@@ -1,37 +1,27 @@
 import sequelize from 'sequelize';
 import {database} from '../database/database';
 
-const embarques = database.define('embarque',{
+const transbordoData = database.define('transbordoData',{
 
     id:{
         type: sequelize.INTEGER,
         primaryKey: true
     },
-    n_operacion:{
+    id_data:{
         type: sequelize.INTEGER
     },
-    estado:{
+    puerto_transb:{
         type: sequelize.TEXT
     },
-    referencia:{
+    naver_transb:{
         type: sequelize.TEXT
     },
-    etd:{
+    fecha:{
         type: sequelize.DATE
-    },
-    eta:{
-        type: sequelize.DATE
-    },
-    rut:{
-        type: sequelize.INTEGER
-    },
-    medio_transporte:{
-        type: sequelize.TEXT
     }
-    
     },{
         timestamps: false,
-        tableName: 'embarque'
+        tableName: 'transbordoData'
     });
 
-export default embarques;
+export default transbordoData;

@@ -1,9 +1,9 @@
 import sequelize from 'sequelize';
 
 export const database = new sequelize(
-    'shipment', //Nombre bd
+    'shipmint', //Nombre bd
     'postgres', //Usuario
-    'qwerty', //Contraseña
+    'pass123', //Contraseña
     {
         host: 'localhost',
         dialect: 'postgres',

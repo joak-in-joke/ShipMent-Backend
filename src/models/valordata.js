@@ -1,37 +1,33 @@
 import sequelize from 'sequelize';
 import {database} from '../database/database';
 
-const embarques = database.define('embarque',{
+const valordata = database.define('valordata',{
 
     id:{
         type: sequelize.INTEGER,
         primaryKey: true
     },
-    n_operacion:{
+    id_data:{
         type: sequelize.INTEGER
     },
-    estado:{
+    nombre_mercancia:{
         type: sequelize.TEXT
     },
-    referencia:{
-        type: sequelize.TEXT
-    },
-    etd:{
-        type: sequelize.DATE
-    },
-    eta:{
-        type: sequelize.DATE
-    },
-    rut:{
+    valor_usd:{
         type: sequelize.INTEGER
     },
-    medio_transporte:{
-        type: sequelize.TEXT
+    flete_usd:{
+        type: sequelize.INTEGER
+    },
+    seguro_usd:{
+        type: sequelize.INTEGER
+    },
+    valor_cif:{
+        type: sequelize.INTEGER
     }
-    
     },{
         timestamps: false,
-        tableName: 'embarque'
+        tableName: 'valordata'
     });
 
-export default embarques;
+export default valordata;

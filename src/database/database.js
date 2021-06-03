@@ -3,7 +3,7 @@ import sequelize from 'sequelize';
 export const database = new sequelize(
     'shipmint', //Nombre bd
     'postgres', //Usuario
-    'pass123', //Contraseña
+    'qwerty', //Contraseña
     {
         host: 'localhost',
         dialect: 'postgres',

@@ -21,7 +21,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: cliente; Type: TABLE; Schema: public; Owner: boosmap
+-- Name: cliente; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.cliente (
@@ -32,7 +32,7 @@ CREATE TABLE public.cliente (
 );
 
 
-ALTER TABLE public.cliente OWNER TO boosmap;
+ALTER TABLE public.cliente OWNER TO postgres;
 
 --
 -- Name: comentarioslineadetiempo; Type: TABLE; Schema: public; Owner: postgres
@@ -112,7 +112,7 @@ ALTER SEQUENCE public.contacto_proveedor_id_seq OWNED BY public.contacto_proveed
 
 
 --
--- Name: contactocliente; Type: TABLE; Schema: public; Owner: boosmap
+-- Name: contactocliente; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.contactocliente (
@@ -125,7 +125,7 @@ CREATE TABLE public.contactocliente (
 );
 
 
-ALTER TABLE public.contactocliente OWNER TO boosmap;
+ALTER TABLE public.contactocliente OWNER TO postgres;
 
 --
 -- Name: cuentabanproveedor; Type: TABLE; Schema: public; Owner: postgres
@@ -521,7 +521,7 @@ ALTER SEQUENCE public.finanza_id_seq OWNED BY public.finanza.id;
 
 
 --
--- Name: finclientes; Type: TABLE; Schema: public; Owner: boosmap
+-- Name: finclientes; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.finclientes (
@@ -530,7 +530,7 @@ CREATE TABLE public.finclientes (
 );
 
 
-ALTER TABLE public.finclientes OWNER TO boosmap;
+ALTER TABLE public.finclientes OWNER TO postgres;
 
 --
 -- Name: item_finanza; Type: TABLE; Schema: public; Owner: postgres
@@ -1015,7 +1015,7 @@ ALTER TABLE ONLY public.valordata ALTER COLUMN id SET DEFAULT nextval('public.va
 
 
 --
--- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: boosmap
+-- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.cliente (id, contacto_id, nombre, nacionalidad) FROM stdin;
@@ -1043,7 +1043,7 @@ COPY public.contacto_proveedor (id, id_proveedor, nombre, cargo, telefono, email
 
 
 --
--- Data for Name: contactocliente; Type: TABLE DATA; Schema: public; Owner: boosmap
+-- Data for Name: contactocliente; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.contactocliente (id, id_cliente, nombre, cargo, telefono, email) FROM stdin;
@@ -1146,7 +1146,7 @@ COPY public.finanza (id, id_embarque, estado, total, descripcion) FROM stdin;
 
 
 --
--- Data for Name: finclientes; Type: TABLE DATA; Schema: public; Owner: boosmap
+-- Data for Name: finclientes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.finclientes (id_finanza, id_cliente) FROM stdin;
@@ -1389,7 +1389,7 @@ SELECT pg_catalog.setval('public.valordata_id_seq', 1, true);
 
 
 --
--- Name: cliente cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: boosmap
+-- Name: cliente cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.cliente
@@ -1413,7 +1413,7 @@ ALTER TABLE ONLY public.contacto_proveedor
 
 
 --
--- Name: contactocliente contactocliente_pkey; Type: CONSTRAINT; Schema: public; Owner: boosmap
+-- Name: contactocliente contactocliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.contactocliente
@@ -1573,7 +1573,7 @@ ALTER TABLE ONLY public.valordata
 
 
 --
--- Name: cliente cliente_contacto_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: boosmap
+-- Name: cliente cliente_contacto_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.cliente
@@ -1605,7 +1605,7 @@ ALTER TABLE ONLY public.contacto_proveedor
 
 
 --
--- Name: contactocliente contactocliente_id_cliente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: boosmap
+-- Name: contactocliente contactocliente_id_cliente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.contactocliente
@@ -1685,7 +1685,7 @@ ALTER TABLE ONLY public.finanza
 
 
 --
--- Name: finclientes finclientes_id_cliente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: boosmap
+-- Name: finclientes finclientes_id_cliente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.finclientes
@@ -1693,7 +1693,7 @@ ALTER TABLE ONLY public.finclientes
 
 
 --
--- Name: finclientes finclientes_id_finanza_fkey; Type: FK CONSTRAINT; Schema: public; Owner: boosmap
+-- Name: finclientes finclientes_id_finanza_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.finclientes
@@ -1757,28 +1757,28 @@ ALTER TABLE ONLY public.valordata
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: boosmap
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
 --
 
 GRANT USAGE ON SCHEMA public TO postgres;
 
 
 --
--- Name: TABLE cliente; Type: ACL; Schema: public; Owner: boosmap
+-- Name: TABLE cliente; Type: ACL; Schema: public; Owner: postgres
 --
 
 GRANT SELECT ON TABLE public.cliente TO postgres;
 
 
 --
--- Name: TABLE contactocliente; Type: ACL; Schema: public; Owner: boosmap
+-- Name: TABLE contactocliente; Type: ACL; Schema: public; Owner: postgres
 --
 
 GRANT SELECT ON TABLE public.contactocliente TO postgres;
 
 
 --
--- Name: TABLE finclientes; Type: ACL; Schema: public; Owner: boosmap
+-- Name: TABLE finclientes; Type: ACL; Schema: public; Owner: postgres
 --
 
 GRANT SELECT ON TABLE public.finclientes TO postgres;

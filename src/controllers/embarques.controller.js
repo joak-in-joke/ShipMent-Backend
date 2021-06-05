@@ -132,19 +132,23 @@ export async function createEmbarque(req, res) {
           newEmbarque,
           newValorData,
           newDataEmbarque,
+
         });
       }
     } else {
       console.log(error);
       res.status(500).json({
         message: "Oops algo salio mal/:",
+
         newEmbarque,
         newValorData,
         newDataEmbarque,
+
       });
     }
   } catch (error) {
     console.log(error);
+
   }
 }
 
@@ -425,17 +429,22 @@ export async function getActivos(req, res) {
   res.json({ allMisiones });
 }
 
+
 export async function getFinalizados(req, res) {
   const allMisiones = await embarques.findAll({
     attributes: [
       "id",
+
       "n_operacion",
+
       "estado",
       "referencia",
       "etd",
       "eta",
+
       "rut",
       "medio_transporte",
+
     ],
     order: [["id", "DESC"]],
     where: {

@@ -2,6 +2,7 @@ import { Router } from "express";
 const router = Router();
 
 import {
+
   createEmbarque,
   getEmbarques,
   deleteEmbarque,
@@ -16,6 +17,7 @@ router.post("/", createEmbarque);
 router.get("/:id", getEmbarques);
 router.get("/", getallEmbarques);
 router.delete("/:id", deleteEmbarque);
+
 router.put("/:id", updateEmbarques);
 router.get("/activos/:id", getActivos);
 router.get("/finalizados/:id", getFinalizados);

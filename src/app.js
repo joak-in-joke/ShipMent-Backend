@@ -1,4 +1,5 @@
 import "@babel/polyfill";
+var cors = require("cors");
 
 const express = require("express");
 const morgan = require("morgan");
@@ -41,6 +42,7 @@ app.use("/shipment", shipment);
 app.use("/auth", auth);
 app.use("/dataembarque", dataembarque);
 app.use("/timeline", timeline);
+
 
 //public
 

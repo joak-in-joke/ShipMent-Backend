@@ -2,9 +2,8 @@ import { Router } from "express";
 const router = Router();
 
 import {
-
   createEmbarque,
-  getEmbarques,
+  getEmbarque,
   deleteEmbarque,
   updateEmbarques,
   getActivos,
@@ -13,13 +12,14 @@ import {
 } from "../controllers/embarques.controller";
 
 //admin/dashboard
-router.post("/", createEmbarque);
-router.get("/:id", getEmbarques);
-router.get("/", getallEmbarques);
-router.delete("/:id", deleteEmbarque);
 
-router.put("/:id", updateEmbarques);
+router.get("/", getallEmbarques);
+router.get("/:id", getEmbarque);
 router.get("/activos/:id", getActivos);
 router.get("/finalizados/:id", getFinalizados);
+
+router.post("/create", createEmbarque);
+router.post("/update/:id", updateEmbarques);
+router.post("/delete/:id", deleteEmbarque);
 
 export default router;

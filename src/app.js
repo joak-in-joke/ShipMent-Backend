@@ -37,12 +37,12 @@ import dataembarque from "./routes/dataembarque.routes";
 import timeline from "./routes/lineadetiempo.routes";
 //routes
 
+app.use(cors());
 app.use("/mision", mision);
 app.use("/shipment", shipment);
 app.use("/auth", auth);
 app.use("/dataembarque", dataembarque);
 app.use("/timeline", timeline);
-
 
 //public
 

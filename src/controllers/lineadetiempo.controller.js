@@ -72,7 +72,7 @@ export async function createTimeline(req, res) {
         }
       );
       return res.json({
-        message: "Mision creada Satisfactoriamente",
+        message: "Linea de tiempo creada Satisfactoriamente",
         newTimeline,
         addComentario,
       });

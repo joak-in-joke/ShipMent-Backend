@@ -2,20 +2,22 @@ import { Router } from "express";
 const router = Router();
 
 import {
-  createEmbarques,
-  getAllEmbarques,
+
+  createEmbarque,
   getEmbarques,
-  deleteEmbarques,
+  deleteEmbarque,
   updateEmbarques,
   getActivos,
   getFinalizados,
+  getallEmbarques,
 } from "../controllers/embarques.controller";
 
 //admin/dashboard
-router.post("/", createEmbarques);
-router.get("/", getAllEmbarques);
+router.post("/", createEmbarque);
 router.get("/:id", getEmbarques);
-router.delete("/:id", deleteEmbarques);
+router.get("/", getallEmbarques);
+router.delete("/:id", deleteEmbarque);
+
 router.put("/:id", updateEmbarques);
 router.get("/activos/:id", getActivos);
 router.get("/finalizados/:id", getFinalizados);

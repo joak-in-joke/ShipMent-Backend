@@ -410,7 +410,7 @@ export async function updateEmbarques(req, res) {
 }
 
 export async function getActivos(req, res) {
-  const allMisiones = await embarques.findAll({
+  const allActivos = await embarques.findAll({
     attributes: [
       "id",
       "n_operacion",
@@ -426,12 +426,12 @@ export async function getActivos(req, res) {
       estado: "Activo",
     },
   });
-  res.json({ allMisiones });
+  res.json({ allActivos });
 }
 
 
 export async function getFinalizados(req, res) {
-  const allMisiones = await embarques.findAll({
+  const allFinalizados = await embarques.findAll({
     attributes: [
       "id",
 
@@ -451,5 +451,5 @@ export async function getFinalizados(req, res) {
       estado: "Finalizado",
     },
   });
-  res.json({ allMisiones });
+  res.json({ allFinalizados });
 }

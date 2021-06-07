@@ -35,6 +35,7 @@ import shipment from "./routes/embarques.routes";
 import auth from "./routes/auth.routes";
 import dataembarque from "./routes/dataembarque.routes";
 import timeline from "./routes/lineadetiempo.routes";
+import proveedores from "./routes/proveedores.routes";
 //routes
 
 app.use("/mision", mision);
@@ -42,6 +43,7 @@ app.use("/shipment", shipment);
 app.use("/auth", auth);
 app.use("/dataembarque", dataembarque);
 app.use("/timeline", timeline);
+app.use("/proveedores", proveedores);
 
 
 //public

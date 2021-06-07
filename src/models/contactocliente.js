@@ -1,39 +1,33 @@
 import sequelize from "sequelize";
 import { database } from "../database/database";
 
-const cuentabanproveedor = database.define(
-  "cuentabanproveedor",
+const contactocliente = database.define(
+  "contactocliente",
   {
     id: {
       type: sequelize.INTEGER,
       primaryKey: true,
     },
-    id_proveedor: {
+    id_cliente: {
       type: sequelize.INTEGER,
     },
-    n_cuenta: {
-      type: sequelize.INTEGER,
+    nombre: {
+      type: sequelize.TEXT,
+    },
+    cargo: {
+      type: sequelize.TEXT,
+    },
+    telefono: {
+      type: sequelize.TEXT,
     },
     email: {
-      type: sequelize.TEXT,
-    },
-    rut: {
-      type: sequelize.INTEGER,
-    },
-    nombre_empresa: {
-      type: sequelize.TEXT,
-    },
-    banco: {
-      type: sequelize.TEXT,
-    },
-    tipo_cuenta: {
       type: sequelize.TEXT,
     },
   },
   {
     timestamps: false,
-    tableName: "cuentabanproveedor",
+    tableName: "contactocliente",
   }
 );
 
-export default cuentabanproveedor;
+export default contactocliente;

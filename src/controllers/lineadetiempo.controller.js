@@ -36,6 +36,7 @@ export async function createTimeline(req, res) {
       );
       return res.json({
         message: "Linea de tiempo creada Satisfactoriamente",
+
         addComentario,
       });
     } else {
@@ -73,6 +74,7 @@ export async function createTimeline(req, res) {
       );
       return res.json({
         message: "Linea de tiempo creada Satisfactoriamente",
+
         newTimeline,
         addComentario,
       });

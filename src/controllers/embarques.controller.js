@@ -11,6 +11,7 @@ import datafcl from "../models/datafcl";
 import transbordo from "../models/transbordoData";
 import documentos from "../models/documentos";
 import documento from "../models/documento";
+import transbordoData from "../models/transbordoData";
 
 export async function createEmbarque(req, res) {
   try {
@@ -132,7 +133,6 @@ export async function createEmbarque(req, res) {
           newEmbarque,
           newValorData,
           newDataEmbarque,
-
         });
       }
     } else {
@@ -143,16 +143,14 @@ export async function createEmbarque(req, res) {
         newEmbarque,
         newValorData,
         newDataEmbarque,
-
       });
     }
   } catch (error) {
     console.log(error);
-
   }
 }
 
-export async function getEmbarques(req, res) {
+export async function getEmbarque(req, res) {
   const { id } = req.params;
   try {
     const embarque = await embarques.findOne({
@@ -160,9 +158,81 @@ export async function getEmbarques(req, res) {
         id,
       },
     });
-    res.json(embarque);
+    if (embarque) {
+      let data_transporte;
+      const datoEmbarque = await dataembarque.findOne({
+        where: {
+          id_embarque: id,
+        },
+      });
+
+      const valorEmbarque = await valordata.findOne({
+        where: {
+          id_data: id,
+        },
+      });
+
+      const transbordoEmbarque = await transbordoData.findOne({
+        where: {
+          id_data: id,
+        },
+      });
+      if (embarque.medio_transporte === "LCL") {
+        data_transporte = await datalcl.findOne({
+          where: {
+            id_data: id,
+          },
+        });
+      } else if (embarque.medio_transporte === "FCL") {
+        data_transporte = await datafcl.findOne({
+          where: {
+            id_data: id,
+          },
+        });
+      }
+
+      const payload = {
+        id: embarque.id,
+        n_operacion: embarque.n_operacion,
+        status: embarque.status,
+        referencia: embarque.referencia,
+        etd: embarque.etd,
+        eta: embarque.eta,
+        medio_transporte: embarque.medio_transporte,
+
+        tipo_operacion: datoEmbarque.tipo_operacion,
+        intercom: datoEmbarque.intercom,
+        exportador: datoEmbarque.inteexportadorrcom,
+        importador: datoEmbarque.importador,
+        embarcador: datoEmbarque.embarcador,
+        agencia_aduana: datoEmbarque.agencia_aduana,
+        tipo_documento: datoEmbarque.tipo_documento,
+        documento: datoEmbarque.documento,
+        motonave: datoEmbarque.motonave,
+        viaje: datoEmbarque.viaje,
+        naviera: datoEmbarque.naviera,
+        transbordo: datoEmbarque.transbordo,
+        reserva: datoEmbarque.reserva,
+        fecha_inicio: datoEmbarque.fecha_inicio,
+        fecha_fin: datoEmbarque.fecha_fin,
+
+        puerto_transb: transbordoEmbarque.puerto_transb,
+        naver_transb: transbordoEmbarque.naver_transb,
+        fecha_transb: transbordoEmbarque.fecha,
+        data_transporte: data_transporte,
+
+        // ...(embarque.medio_transporte === "LCL"
+        //   ? { LCL: data_transporte }
+        //   : { FCL: data_transporte }),
+
+        valorData: valorEmbarque,
+      };
+      res.json({ resultado: true, data: payload });
+    } else {
+      res.json({ resultado: false, message: "ID inexistente" });
+    }
   } catch (error) {
-    console.log(error);
+    console.log({ resultado: false, error: error });
   }
 }
 
@@ -174,6 +244,7 @@ export async function getallEmbarques(req, res) {
     console.log(error);
   }
 }
+
 export async function deleteEmbarque(req, res) {
   const { id } = req.params;
   //al eliminar un embarque elimino los comentarios asociados
@@ -429,7 +500,6 @@ export async function getActivos(req, res) {
   res.json({ allActivos });
 }
 
-
 export async function getFinalizados(req, res) {
   const allFinalizados = await embarques.findAll({
     attributes: [
@@ -444,7 +514,6 @@ export async function getFinalizados(req, res) {
 
       "rut",
       "medio_transporte",
-
     ],
     order: [["id", "DESC"]],
     where: {

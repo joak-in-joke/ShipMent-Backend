@@ -194,7 +194,7 @@ export async function getEmbarque(req, res) {
       const payload = {
         id: embarque.id,
         n_operacion: embarque.n_operacion,
-        status: embarque.status,
+        estado: embarque.estado,
         referencia: embarque.referencia,
         etd: embarque.etd,
         eta: embarque.eta,
@@ -220,11 +220,6 @@ export async function getEmbarque(req, res) {
         naver_transb: transbordoEmbarque.naver_transb,
         fecha_transb: transbordoEmbarque.fecha,
         data_transporte: data_transporte,
-
-        // ...(embarque.medio_transporte === "LCL"
-        //   ? { LCL: data_transporte }
-        //   : { FCL: data_transporte }),
-
         valorData: valorEmbarque,
       };
       res.json({ resultado: true, data: payload });

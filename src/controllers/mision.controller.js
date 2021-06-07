@@ -8,7 +8,7 @@ export async function createMissions(req, res) {
       {
         contenido,
         creado: sequelize.literal("CURRENT_TIMESTAMP"),
-        estado: "Activo"
+        estado: "Activo",
       },
       {
         fields: ["contenido", "creado", "estado"],
@@ -16,37 +16,31 @@ export async function createMissions(req, res) {
     );
     if (newMision) {
       return res.json({
-        message: "Mision create",
+        resultado: true,
         newMision,
       });
+    } else {
+      console.log(error);
+      res.status(500).json({
+        resultado: false,
+      });
     }
-
-
-        else{
-            console.log(error);
-            res.status(500).json({
-                message: 'Oops algo salio mal/:'
-            })
-        }
-    }       
-        catch(error){
-        console.log(error);
-        res.status(500).json({
-            message: 'Oops algo salio mal/:'
-        });
-}
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      resultado: false,
+    });
+  }
 }
 
-export async function getAllMissions(req, res){
-    const allMisiones = await misionero.findAll({
-        attributes: ['id','contenido','creado','estado'],
-        order: [
-            ['id', 'DESC']
-        ],
-        attributes: ['id','contenido']
+export async function getAllMissions(req, res) {
+  const allMisiones = await misionero.findAll({
+    attributes: ["id", "contenido", "creado", "estado"],
+    order: [["id", "DESC"]],
+    attributes: ["id", "contenido", "estado"],
+  });
 
-  }); 
- res.json(allMisiones);
+  res.json(allMisiones);
 }
 
 export async function getMision(req, res) {
@@ -56,11 +50,41 @@ export async function getMision(req, res) {
       where: {
         id,
       },
-      attributes: ['id','contenido']
+      attributes: ["id", "contenido", "estado"],
     });
-    res.json(mision);
+    res.json({ resultado: true, mision });
   } catch (error) {
-    console.log(error);
+    console.log({ resultado: false, error });
+  }
+}
+
+export async function getActiveMissions(req, res) {
+  try {
+    const activas = await misionero.findAll({
+      where: {
+        estado: "Activo",
+      },
+      attributes: ["id", "contenido", "estado"],
+      order: [["id", "DESC"]],
+    });
+    res.json({ resultado: true, activas });
+  } catch (error) {
+    console.log({ resultado: false, error });
+  }
+}
+
+export async function getFinalizedMissions(req, res) {
+  try {
+    const finalizadas = await misionero.findAll({
+      where: {
+        estado: "Finalizado",
+      },
+      attributes: ["id", "contenido", "estado"],
+      order: [["id", "DESC"]],
+    });
+    res.json({ resultado: true, finalizadas });
+  } catch (error) {
+    console.log({ resultado: false, error });
   }
 }
 
@@ -68,14 +92,14 @@ export async function deleteMision(req, res) {
   const { id } = req.params;
 
   try {
-    const deleteRowCount = await misionero.destroy({
+    const deletemisionera = await misionero.destroy({
       where: {
         id,
       },
     });
     res.json({
+      resultado: true,
       message: "Mision eliminada correctamente",
-      count: deleteRowCount,
     });
   } catch (error) {
     console.log(error);
@@ -84,20 +108,19 @@ export async function deleteMision(req, res) {
 
 export async function updateMision(req, res) {
   const { id } = req.params;
-  const { contenido} = req.body;
-  console.log(id, contenido);
+  const { contenido, estado } = req.body;
 
   const misionUpdate = await misionero.update(
     {
       contenido,
+      estado,
     },
     {
       where: { id },
     }
   );
   res.json({
+    resultado: true,
     message: "Mision update Succesfully! (: ",
-    misionUpdate,
   });
 }
-

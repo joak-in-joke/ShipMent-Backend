@@ -1,4 +1,4 @@
-import sequelize from "sequelize";
+import sequelize, { json } from "sequelize";
 import proveedor from "../models/proveedor";
 import contactoproveedor from "../models/contacto_proveedor";
 import cuenta from "../models/cuentabanproveedor";
@@ -75,18 +75,21 @@ export async function createProvider(req, res) {
     );
     if (newProveedor) {
       return res.json({
+        resultado: true,
         message: "Proveedor created Succesfully (:",
         newProveedor,
       });
     } else {
       console.log(error);
       res.status(500).json({
+        resultado: false,
         message: "Oops algo salio mal/:",
       });
     }
   } catch (error) {
     console.log(error);
     res.status(500).json({
+      resultado: false,
       message: "Oops Somethings goes Wrong /:",
     });
   }
@@ -121,7 +124,7 @@ export async function getAllProviders(req, res) {
     ],
     order: [["id", "DESC"]],
   });
-  res.json(allProveedores, allContacts, allaccounts);
+  res.json({ allProveedores, allContacts, allaccounts });
 }
 
 export async function getProvider(req, res) {
@@ -141,27 +144,34 @@ export async function getProvider(req, res) {
         "telefono",
       ],
     });
-    const Contacto = await contactoproveedor.findOne({
-      where: {
-        id,
-      },
-      attributes: ["id", "nombre", "cargo", "telefono", "email"],
-    });
-    const Cuenta = await cuenta.findOne({
-      where: {
-        id,
-      },
-      attributes: [
-        "id",
-        "n_cuenta",
-        "email",
-        "rut",
-        "nombre_empresa",
-        "banco",
-        "tipo_cuenta",
-      ],
-    });
 
+    if (Proveedor) {
+      const Contacto = await contactoproveedor.findOne({
+        where: {
+          id_proveedor: Proveedor.id,
+        },
+        attributes: ["id", "nombre", "cargo", "telefono", "email"],
+      });
+      const Cuenta = await cuenta.findOne({
+        where: {
+          id_proveedor: Proveedor.id,
+        },
+        attributes: [
+          "id",
+          "n_cuenta",
+          "email",
+          "rut",
+          "nombre_empresa",
+          "banco",
+          "tipo_cuenta",
+        ],
+      });
+    } else {
+      res.json({
+        resultado: false,
+        message: "No se ha encontrado ningun Cliente.",
+      });
+    }
     const payload = {
       nombre: Proveedor.nombre,
       pais: Proveedor.pais,
@@ -184,7 +194,7 @@ export async function getProvider(req, res) {
       tipo_cuenta: Cuenta.tipo_cuenta,
     };
 
-    res.json(payload);
+    res.json({ resultado: true, payload });
   } catch (error) {
     console.log(error);
   }
@@ -220,10 +230,12 @@ export async function deleteProvider(req, res) {
         },
       });
       res.json({
+        resultado: true,
         message: "Proveedor eliminado correctamente",
       });
     } else {
       res.json({
+        resultado: false,
         message: "Error al eliminar, no se encontro Proveedor",
       });
     }
@@ -294,6 +306,7 @@ export async function updateProvider(req, res) {
   );
 
   res.json({
+    resultado: true,
     message: "Proveedor update Succesfully! (: ",
   });
 }

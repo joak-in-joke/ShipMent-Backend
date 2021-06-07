@@ -517,7 +517,7 @@ export async function getFinalizados(req, res) {
     ],
     order: [["id", "DESC"]],
     where: {
-      estado: "Finalizado",
+      estado: "finalizado",
     },
   });
   res.json({ allFinalizados });

@@ -36,6 +36,9 @@ import auth from "./routes/auth.routes";
 import dataembarque from "./routes/dataembarque.routes";
 import timeline from "./routes/lineadetiempo.routes";
 import proveedores from "./routes/proveedores.routes";
+import clientes from "./routes/cliente.routes";
+import user from "./routes/usuario.routes";
+
 //routes
 
 app.use(cors());
@@ -44,7 +47,9 @@ app.use("/shipment", shipment);
 app.use("/auth", auth);
 app.use("/dataembarque", dataembarque);
 app.use("/timeline", timeline);
-app.use("/proveedores", proveedores);
+app.use("/provider", proveedores);
+app.use("/client", clientes);
+app.use("/user", user);
 
 //public
 

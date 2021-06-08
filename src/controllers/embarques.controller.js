@@ -222,12 +222,12 @@ export async function getEmbarque(req, res) {
         data_transporte: data_transporte,
         valorData: valorEmbarque,
       };
-      res.json({ resultado: true, data: payload });
+      res.json({ resultado: true, data: payload }).status(200);
     } else {
-      res.json({ resultado: false, message: "ID inexistente" });
+      res.json({ resultado: false, message: "ID inexistente" }).status(400);
     }
   } catch (error) {
-    console.log({ resultado: false, error: error });
+    console.log({ resultado: false, error: error }).status(400);
   }
 }
 

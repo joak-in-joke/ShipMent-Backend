@@ -11,6 +11,9 @@ const comentarioslineadetiempo = database.define(
     id_linea_tiempo: {
       type: sequelize.INTEGER,
     },
+    id_usuario: {
+      type: sequelize.INTEGER,
+    },
     contenido: {
       type: sequelize.TEXT,
     },

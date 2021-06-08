@@ -2,14 +2,18 @@ import { Router } from "express";
 const router = Router();
 
 import {
-  createTimeline,
+  createComentary,
   UpdateTimeline,
   deleteTimeline,
   getTimelinesbyid,
+  deleteComentary,
+  finishTimeline,
 } from "../controllers/lineadetiempo.controller";
 
 //admin/dashboard
-router.post("/", createTimeline);
+router.post("/add", createComentary);
+router.post("/delete", deleteComentary);
+router.post("/finish", finishTimeline);
 router.put("/:id", UpdateTimeline);
 
 router.delete("/:id", deleteTimeline);

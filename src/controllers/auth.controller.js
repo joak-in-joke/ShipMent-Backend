@@ -107,7 +107,7 @@ export const signIn = async (req, res) => {
         permisos: codRol,
       };
       bool = true;
-      res.json({ Resultado: bool, Usuario: result, token: user_token });
+      res.json({ Resultado: bool, usuario: result, token: user_token });
     } else {
       res.json({ resultado: bool, message: "Credenciales incorrectas" });
     }

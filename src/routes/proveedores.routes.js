@@ -10,9 +10,9 @@ import {
 
 // auth
 
-router.post("/", createProvider);
+router.post("/add", createProvider);
 router.get("/", getAllProviders);
 router.get("/:id", getProvider);
-router.delete("/:id", deleteProvider);
+router.post("/delete", deleteProvider);
 router.put("/:id", updateProvider);
 module.exports = router;

@@ -2,7 +2,7 @@ import sequelize, { json } from "sequelize";
 import proveedor from "../models/proveedor";
 import contactoproveedor from "../models/contacto_proveedor";
 import cuenta from "../models/cuentabanproveedor";
-import cuentabanproveedor from "../models/cuentabanproveedor";
+// import cuentabanproveedor from "../models/cuentabanproveedor";
 
 export async function createProvider(req, res) {
   const {
@@ -96,7 +96,26 @@ export async function createProvider(req, res) {
 }
 
 export async function getAllProviders(req, res) {
-  const allProveedores = await proveedor.findAll({
+  const proveedores = await proveedor.findAll({
+    include: [
+      {
+        model: contactoproveedor,
+        as: "contacto_proveedor",
+        attributes: ["nombre", "cargo", "telefono", "email"],
+      },
+      {
+        model: cuenta,
+        as: "cuenta_contacto",
+        attributes: [
+          "n_cuenta",
+          "email",
+          "rut",
+          "nombre_empresa",
+          "banco",
+          "tipo_cuenta",
+        ],
+      },
+    ],
     attributes: [
       "id",
       "nombre",
@@ -106,25 +125,8 @@ export async function getAllProviders(req, res) {
       "email",
       "telefono",
     ],
-    order: [["id", "DESC"]],
   });
-  const allContacts = await contactoproveedor.findAll({
-    attributes: ["id", "nombre", "cargo", "telefono", "email"],
-    order: [["id", "DESC"]],
-  });
-  const allaccounts = await cuenta.findAll({
-    attributes: [
-      "id",
-      "n_cuenta",
-      "email",
-      "rut",
-      "nombre_empresa",
-      "banco",
-      "tipo_cuenta",
-    ],
-    order: [["id", "DESC"]],
-  });
-  res.json({ allProveedores, allContacts, allaccounts });
+  res.json({ proveedores });
 }
 
 export async function getProvider(req, res) {
@@ -201,8 +203,7 @@ export async function getProvider(req, res) {
 }
 
 export async function deleteProvider(req, res) {
-  const { id } = req.params;
-
+  const { id } = req.body;
   try {
     //primero bsucamos si tiene, si hay eliminamos la cuenta, los datos del banco y finalmente el proveedor
     const findProveedor = await proveedor.findOne({

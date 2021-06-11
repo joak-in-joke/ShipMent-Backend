@@ -1,33 +1,28 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
-
-const datafcl = database.define('datafcl',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
-    },
-    id_data:{
-        type: sequelize.INTEGER
-    },
-    deposito_contenedores:{
-        type: sequelize.TEXT
-    },
-    cont_tipo:{
-        type: sequelize.TEXT
-    },
-    sello:{
-        type: sequelize.TEXT
-    },
-    puerto_destino:{
-        type: sequelize.TEXT
-    },
-    lugar_destino:{
-        type: sequelize.TEXT
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class DataFCL extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-    },{
-        timestamps: false,
-        tableName: 'datafcl'
-    });
-
-export default datafcl;
+  };
+  DataFCL.init({
+    id_data: DataTypes.INTEGER,
+    id_puerto_destino: DataTypes.INTEGER,
+    deposito_contenedores: DataTypes.STRING,
+    cont_tipo: DataTypes.STRING,
+    sello: DataTypes.STRING,
+    lugar_destino: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'DataFCL',
+  });
+  return DataFCL;
+};

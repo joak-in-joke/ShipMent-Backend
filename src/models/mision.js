@@ -1,24 +1,24 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
-
-const mision = database.define('mision',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
-    },
-    contenido:{
-        type: sequelize.TEXT
-    },
-    creado:{
-        type: sequelize.DATE
-    },
-    estado:{
-        type: sequelize.TEXT
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Mision extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-    },{
-        timestamps: false,
-        tableName: 'mision'
-    });
-
-export default mision;
+  };
+  Mision.init({
+    contenido: DataTypes.TEXT,
+    creado: DataTypes.DATE
+  }, {
+    sequelize,
+    modelName: 'Mision',
+  });
+  return Mision;
+};

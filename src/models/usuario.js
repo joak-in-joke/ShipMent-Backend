@@ -1,20 +1,24 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
-
-const usuarios = database.define('usuario',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
-    },                                      //tipo 1: usuario
-    tipo:{                                  //tipo 2: SuperUsuario
-        type: sequelize.INTEGER             //tipo 3: Admin
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Usuario extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-
-    
-    },{
-        timestamps: false,
-        tableName: 'usuario'
-    });
-
-export default usuarios;
+  };
+  Usuario.init({
+    id_permisos: DataTypes.INTEGER,
+    tipo: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'Usuario',
+  });
+  return Usuario;
+};

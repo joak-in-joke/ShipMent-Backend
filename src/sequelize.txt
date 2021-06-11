@@ -1,0 +1,28 @@
+-npx sequelize-cli model:generate --name Permisos --attributes id_usuario:integer,perm_finanzas:boolean,perm_misiones:boolean,perm_superuser:boolean,perm_admin:boolean
+-npx sequelize-cli model:generate --name DataUsuario --attributes id_usuario:integer,nombre:string,apellido:string,rut:numeric,dv:string,email:string,estado:string,cargo:string,ciudad:string,asesor:string,telefono:string,pass:string
+-npx sequelize-cli model:generate --name Usuario --attributes id_permisos:integer,tipo:integer
+-npx sequelize-cli model:generate --name Nota --attributes contenido:text,creado:date
+-npx sequelize-cli model:generate --name Mision --attributes contenido:text,creado:date
+-npx sequelize-cli model:generate --name ValorData --attributes id_data:integer,nombre_mercancia:string,valor_usd:numeric,flete_usd:numeric,seguro_usd:numeric
+-npx sequelize-cli model:generate --name Embarque --attributes n_operacion:integer,estado:numeric,referencia:string,etd:date,eta:date,media_transporte:string
+-npx sequelize-cli model:generate --name LineaDeTiempo --attributes id_embarque:integer,fecha_fin:date
+-npx sequelize-cli model:generate --name ComentariosLTiempo --attributes id_linea_tiempo:integer,id_usuario:integer,contenido:text,creado:date,estado:string,titulo:string,fecha:date,icono:numeric
+-npx sequelize-cli model:generate --name DataEmbarque --attributes id_embarque:integer,id_puerto_embarque:integer,id_exportador:integer,id_importador:integer,id_operador:integer,id_agencia:integer,tipo_operacion:string,incoterm:string,tipo_documento:string,documento:string,motonave:string,viaje:string,naviera:string,transbordo:boolean,reserva:string,valor_cif:numeric
+-npx sequelize-cli model:generate --name Documentos --attributes id_embarque:integer
+-npx sequelize-cli model:generate --name Documento --attributes id_documentos:integer,id_tipo:integer,archivo:string,version:numeric,direccion:string
+-npx sequelize-cli model:generate --name DocumentoTipos --attributes tipo:string
+-npx sequelize-cli model:generate --name TransbordoData --attributes id_data:integer,id_puerto_transbordo:integer,naver_transb:string,fecha_transb:date
+-npx sequelize-cli model:generate --name DataLCL --attributes id_data:integer,id_puerto_destino:integer,contenedor:string,cant_bultos:integer,peso:numeric,volumen:numeric,lugar_destino:string
+-npx sequelize-cli model:generate --name DataFCL --attributes id_data:integer,id_puerto_destino:integer,deposito_contenedores:string,cont_tipo:string,sello:string,lugar_destino:string
+-npx sequelize-cli model:generate --name Puerto --attributes nombre:string,tipo:string
+-npx sequelize-cli model:generate --name Contacto --attributes id_proveedor_cliente:integer,nombre:string,cargo:string,telefono:numeric,email:string
+-npx sequelize-cli model:generate --name CuentaBanco --attributes id_proveedor_cliente:integer,n_cuenta:numeric,email:string,rut:string,nombre_empresa:string,banco:string,tipo_de_cuenta:string
+-npx sequelize-cli model:generate --name ProveedorCliente --attributes pais:string,direccion:string,nombre:string,rut:string,telefono:string,email:string
+-npx sequelize-cli model:generate --name ItemFinanza --attributes id_finanza:integer,id_proveedor:integer,concepto:string,monto:numeric,factura:string,fac_tipo:string,fac_fecha:date,estado:string,tipo:integer
+-npx sequelize-cli model:generate --name Finanza --attributes id_embarque:integer,estado:string,total:numeric,descripcion:string
+-npx sequelize-cli model:generate --name OperadorLogistico --attributes nombre:string
+-npx sequelize-cli model:generate --name AgenciaAduana --attributes nombre:string
+
+
+
+

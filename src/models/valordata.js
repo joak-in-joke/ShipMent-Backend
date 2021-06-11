@@ -1,33 +1,27 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
-
-const valordata = database.define('valordata',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
-    },
-    id_data:{
-        type: sequelize.INTEGER
-    },
-    nombre_mercancia:{
-        type: sequelize.TEXT
-    },
-    valor_usd:{
-        type: sequelize.INTEGER
-    },
-    flete_usd:{
-        type: sequelize.INTEGER
-    },
-    seguro_usd:{
-        type: sequelize.INTEGER
-    },
-    valor_cif:{
-        type: sequelize.INTEGER
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class ValorData extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-    },{
-        timestamps: false,
-        tableName: 'valordata'
-    });
-
-export default valordata;
+  };
+  ValorData.init({
+    id_data: DataTypes.INTEGER,
+    nombre_mercancia: DataTypes.STRING,
+    valor_usd: DataTypes.NUMERIC,
+    flete_usd: DataTypes.NUMERIC,
+    seguro_usd: DataTypes.NUMERIC
+  }, {
+    sequelize,
+    modelName: 'ValorData',
+  });
+  return ValorData;
+};

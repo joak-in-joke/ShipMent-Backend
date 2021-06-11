@@ -1,66 +1,38 @@
-import sequelize from "sequelize";
-import { database } from "../database/database";
-
-const dataembarque = database.define(
-  "dataembarque",
-  {
-    id: {
-      type: sequelize.INTEGER,
-      primaryKey: true,
-    },
-    id_embarque: {
-      type: sequelize.INTEGER,
-    },
-    tipo_operacion: {
-      type: sequelize.TEXT,
-    },
-    intercom: {
-      type: sequelize.TEXT,
-    },
-    exportador: {
-      type: sequelize.TEXT,
-    },
-    importador: {
-      type: sequelize.TEXT,
-    },
-    embarcador: {
-      type: sequelize.TEXT,
-    },
-    agencia_aduana: {
-      type: sequelize.TEXT,
-    },
-    tipo_documento: {
-      type: sequelize.TEXT,
-    },
-    documento: {
-      type: sequelize.TEXT,
-    },
-    motonave: {
-      type: sequelize.TEXT,
-    },
-    viaje: {
-      type: sequelize.TEXT,
-    },
-    naviera: {
-      type: sequelize.TEXT,
-    },
-    transbordo: {
-      type: sequelize.BOOLEAN,
-    },
-    reserva: {
-      type: sequelize.TEXT,
-    },
-    fecha_inicio: {
-      type: sequelize.DATE,
-    },
-    fecha_fin: {
-      type: sequelize.DATE,
-    },
-  },
-  {
-    timestamps: false,
-    tableName: "dataembarque",
-  }
-);
-
-export default dataembarque;
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class DataEmbarque extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  };
+  DataEmbarque.init({
+    id_embarque: DataTypes.INTEGER,
+    id_puerto_embarque: DataTypes.INTEGER,
+    id_exportador: DataTypes.INTEGER,
+    id_importador: DataTypes.INTEGER,
+    id_operador: DataTypes.INTEGER,
+    id_agencia: DataTypes.INTEGER,
+    tipo_operacion: DataTypes.STRING,
+    incoterm: DataTypes.STRING,
+    tipo_documento: DataTypes.STRING,
+    documento: DataTypes.STRING,
+    motonave: DataTypes.STRING,
+    viaje: DataTypes.STRING,
+    naviera: DataTypes.STRING,
+    transbordo: DataTypes.BOOLEAN,
+    reserva: DataTypes.STRING,
+    valor_cif: DataTypes.NUMERIC
+  }, {
+    sequelize,
+    modelName: 'DataEmbarque',
+  });
+  return DataEmbarque;
+};

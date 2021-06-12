@@ -12,11 +12,11 @@ import {
 } from "../controllers/mision.controller";
 
 //admin/dashboard
-router.post("/", createMissions);
+router.post("/add", createMissions);
 router.get("/", getAllMissions);
 router.get("/:id", getMision);
-router.delete("/:id", deleteMision);
-router.put("/:id", updateMision);
+router.post("/delete", deleteMision);
+router.post("/put", updateMision);
 router.get("/activos", getActiveMissions);
 router.get("/finalizados", getFinalizedMissions);
 

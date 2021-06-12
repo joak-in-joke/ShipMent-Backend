@@ -26,9 +26,6 @@ const datausuario = database.define(
     mail: {
       type: sequelize.TEXT,
     },
-    estado: {
-      type: sequelize.TEXT,
-    },
     cargo: {
       type: sequelize.TEXT,
     },

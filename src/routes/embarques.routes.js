@@ -9,14 +9,17 @@ import {
   getActivos,
   getFinalizados,
   getallEmbarques,
+  getEstado,
 } from "../controllers/embarques.controller";
 
 //admin/dashboard
+router.get("/activos", getActivos);
+router.get("/finalizados", getFinalizados);
+router.get("/estado", getEstado);
+// router.post("/:id", setEstado);
+router.get("/:id", getEmbarque);
 
 router.get("/", getallEmbarques);
-router.get("/:id", getEmbarque);
-router.get("/activos/:id", getActivos);
-router.get("/finalizados/:id", getFinalizados);
 
 router.post("/create", createEmbarque);
 router.post("/update/:id", updateEmbarques);

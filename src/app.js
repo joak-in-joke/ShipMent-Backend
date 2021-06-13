@@ -49,7 +49,7 @@ app.use("/dataembarque", dataembarque);
 app.use("/timeline", timeline);
 app.use("/provider", proveedores);
 app.use("/client", clientes);
-app.use("/user", user);
+app.use("/users", user);
 
 //public
 

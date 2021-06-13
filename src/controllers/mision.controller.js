@@ -89,7 +89,7 @@ export async function getFinalizedMissions(req, res) {
 }
 
 export async function deleteMision(req, res) {
-  const { id } = req.params;
+  const { id } = req.body;
 
   try {
     const deletemisionera = await misionero.destroy({

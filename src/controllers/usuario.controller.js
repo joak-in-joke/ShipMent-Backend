@@ -1,6 +1,7 @@
 import sequelize from "sequelize";
 import user from "../models/usuario";
 import datauser from "../models/datausuario";
+import permisos from "../models/permisos";
 
 export async function createUser(req, res) {
   const {
@@ -15,6 +16,7 @@ export async function createUser(req, res) {
     asesor,
     telefono,
     pass,
+    permission,
   } = req.body;
   try {
     const newUser = await user.create(
@@ -26,9 +28,8 @@ export async function createUser(req, res) {
         attributes: ["id"],
       }
     );
-    console.log(newUser);
     if (newUser) {
-      const newDataUser = await datauser.create(
+      datauser.create(
         {
           id_usuario: newUser.id,
           nombre,
@@ -55,6 +56,24 @@ export async function createUser(req, res) {
             "asesor",
             "telefono",
             "pass",
+          ],
+        }
+      );
+      permisos.create(
+        {
+          id_usuario: newUser.id,
+          perm_finanza: permission.finanzas,
+          perm_misiones: permission.misiones,
+          perm_superuser: permission.superuser,
+          perm_admin: permission.admin,
+        },
+        {
+          fields: [
+            "id_usuario",
+            "perm_finanza",
+            "perm_misiones",
+            "perm_superuser",
+            "perm_admin",
           ],
         }
       );
@@ -145,6 +164,18 @@ export async function getUser(req, res) {
         ],
       });
 
+      const permUser = await permisos.findOne({
+        where: {
+          id_usuario: finduser.id,
+        },
+        attributes: [
+          "perm_finanza",
+          "perm_misiones",
+          "perm_superuser",
+          "perm_admin",
+        ],
+      });
+
       const payload = {
         id: finduser.id,
         tipo: finduser.tipo,
@@ -158,6 +189,7 @@ export async function getUser(req, res) {
         asesor: finddatauser.asesor,
         telefono: finddatauser.telefono,
         pass: finddatauser.pass,
+        permUser: permUser,
       };
 
       res.json({ respuesta: true, message: payload });
@@ -177,7 +209,7 @@ export async function getUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-  const { id } = req.params;
+  const { id } = req.body;
 
   try {
     //primero bsucamos si tiene, si hay eliminamos los datos asociados
@@ -197,6 +229,11 @@ export async function deleteUser(req, res) {
       const deleteuser = await user.destroy({
         where: {
           id,
+        },
+      });
+      const deletepermission = await permisos.destroy({
+        where: {
+          id_usuario: id,
         },
       });
 
@@ -221,8 +258,8 @@ export async function deleteUser(req, res) {
 }
 
 export async function updateUser(req, res) {
-  const { id } = req.params;
   const {
+    id,
     tipo,
     nombre,
     apellido,
@@ -234,6 +271,7 @@ export async function updateUser(req, res) {
     asesor,
     telefono,
     pass,
+    permission,
   } = req.body;
 
   const updateUser = await user.update(
@@ -257,6 +295,17 @@ export async function updateUser(req, res) {
       asesor,
       telefono,
       pass,
+    },
+    {
+      where: { id_usuario: id },
+    }
+  );
+  const UpdatePermisos = permisos.update(
+    {
+      perm_finanza: permission.finanzas,
+      perm_misiones: permission.misiones,
+      perm_superuser: permission.superuser,
+      perm_admin: permission.admin,
     },
     {
       where: { id_usuario: id },

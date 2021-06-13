@@ -10,10 +10,11 @@ import {
 } from "../controllers/usuario.controller";
 
 //admin/dashboard
-router.post("/add", createUser);
 router.get("/", getAllUsers);
 router.get("/:id", getUser);
+
+router.post("/update", updateUser);
 router.post("/delete", deleteUser);
-router.post("/put", updateUser);
+router.post("/add", createUser);
 
 export default router;

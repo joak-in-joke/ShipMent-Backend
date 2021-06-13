@@ -11,8 +11,8 @@ import {
 // auth
 
 router.post("/add", createProvider);
+router.post("/edit", updateProvider);
+router.post("/delete", deleteProvider);
 router.get("/", getAllProviders);
 router.get("/:id", getProvider);
-router.post("/delete", deleteProvider);
-router.put("/:id", updateProvider);
 module.exports = router;

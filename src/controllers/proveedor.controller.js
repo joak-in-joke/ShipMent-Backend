@@ -246,8 +246,8 @@ export async function deleteProvider(req, res) {
 }
 
 export async function updateProvider(req, res) {
-  const { id } = req.params;
   const {
+    id,
     nombre,
     pais,
     rut,

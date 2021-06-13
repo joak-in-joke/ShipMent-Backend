@@ -859,7 +859,7 @@ export async function getEstado(req, res) {
     Llegadas: allLlegadas.length,
     Finalizados: allFinalizados.length,
   };
-  res.json({ Estado });
+  res.json({ resultado: true, data: Estado });
 }
 
 export async function getActivos(req, res) {

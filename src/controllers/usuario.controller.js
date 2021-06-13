@@ -98,20 +98,7 @@ export async function getAllUsers(req, res) {
     attributes: ["id_usuario", "nombre", "apellido", "telefono"],
     order: [["id", "DESC"]],
   });
-
-  const payload = {
-    tipo: user.tipo,
-    nombre: user.nombre,
-    apellido: user.apellido,
-    rut: user.rut,
-    dv: user.tidvpo,
-    mail: user.mail,
-    cargo: user.cargo,
-    asesor: user.asesor,
-    telefono: user.telefono,
-    pass: user.pass,
-  };
-  res.json(alldatauser);
+  res.json({ resultado: true, users: alldatauser }).status(200);
 }
 
 export async function getUser(req, res) {
@@ -199,6 +186,11 @@ export async function deleteUser(req, res) {
     });
     if (finduser) {
       //primero eliminamos la cuenta asociada a user
+      const deletepermission = await permisos.destroy({
+        where: {
+          id_usuario: id,
+        },
+      });
       const deleteCuenta = await datauser.destroy({
         where: {
           id_usuario: id,
@@ -208,11 +200,6 @@ export async function deleteUser(req, res) {
       const deleteuser = await user.destroy({
         where: {
           id,
-        },
-      });
-      const deletepermission = await permisos.destroy({
-        where: {
-          id_usuario: id,
         },
       });
 

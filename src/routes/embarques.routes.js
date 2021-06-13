@@ -13,9 +13,9 @@ import {
 } from "../controllers/embarques.controller";
 
 //admin/dashboard
-router.get("/activos", getActivos);
-router.get("/finalizados", getFinalizados);
-router.get("/estado", getEstado);
+router.get("/active", getActivos);
+router.get("/finished", getFinalizados);
+router.get("/state", getEstado);
 // router.post("/:id", setEstado);
 router.get("/:id", getEmbarque);
 

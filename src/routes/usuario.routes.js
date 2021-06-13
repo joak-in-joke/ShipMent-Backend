@@ -10,8 +10,8 @@ import {
 } from "../controllers/usuario.controller";
 
 //admin/dashboard
-router.get("/", getAllUsers);
 router.get("/:id", getUser);
+router.get("/", getAllUsers);
 
 router.post("/update", updateUser);
 router.post("/delete", deleteUser);

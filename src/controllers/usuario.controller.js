@@ -11,7 +11,6 @@ export async function createUser(req, res) {
     rut,
     dv,
     mail,
-    estado,
     cargo,
     asesor,
     telefono,
@@ -37,7 +36,6 @@ export async function createUser(req, res) {
           rut,
           dv,
           mail,
-          estado,
           cargo,
           asesor,
           telefono,
@@ -50,8 +48,6 @@ export async function createUser(req, res) {
             "apellido",
             "rut",
             "dv",
-            "mail",
-            "estado",
             "cargo",
             "asesor",
             "telefono",
@@ -98,24 +94,8 @@ export async function createUser(req, res) {
 }
 
 export async function getAllUsers(req, res) {
-  const allUsers = await user.findAll({
-    attributes: ["id", "tipo"],
-    order: [["id", "DESC"]],
-  });
   const alldatauser = await datauser.findAll({
-    attributes: [
-      "id_usuario",
-      "nombre",
-      "apellido",
-      "rut",
-      "dv",
-      "mail",
-      "estado",
-      "cargo",
-      "asesor",
-      "telefono",
-      "pass",
-    ],
+    attributes: ["id_usuario", "nombre", "apellido", "telefono"],
     order: [["id", "DESC"]],
   });
 
@@ -126,13 +106,12 @@ export async function getAllUsers(req, res) {
     rut: user.rut,
     dv: user.tidvpo,
     mail: user.mail,
-    estado: user.estado,
     cargo: user.cargo,
     asesor: user.asesor,
     telefono: user.telefono,
     pass: user.pass,
   };
-  res.json({ respuesta: true, message: allUsers, alldatauser });
+  res.json(alldatauser);
 }
 
 export async function getUser(req, res) {
@@ -192,7 +171,7 @@ export async function getUser(req, res) {
         permUser: permUser,
       };
 
-      res.json({ respuesta: true, message: payload });
+      res.json({ respuesta: true, data: payload });
     } else {
       res.json({
         respuesta: false,

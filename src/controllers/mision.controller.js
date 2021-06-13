@@ -34,13 +34,13 @@ export async function createMissions(req, res) {
 }
 
 export async function getAllMissions(req, res) {
-  const allMisiones = await misionero.findAll({
-    attributes: ["id", "contenido", "creado", "estado"],
-    order: [["id", "DESC"]],
-    attributes: ["id", "contenido", "estado"],
-  });
+  try {
+    const data = await misionero.findAll({});
 
-  res.json(allMisiones);
+    res.json(data);
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export async function getMision(req, res) {
@@ -52,7 +52,13 @@ export async function getMision(req, res) {
       },
       attributes: ["id", "contenido", "estado"],
     });
-    res.json({ resultado: true, mision });
+
+    const payload = {
+      id: mision.id,
+      contenido: mision.contenido,
+      estado: mision.estado,
+    };
+    res.json({ resultado: true, data: payload });
   } catch (error) {
     console.log({ resultado: false, error });
   }
@@ -67,9 +73,14 @@ export async function getActiveMissions(req, res) {
       attributes: ["id", "contenido", "estado"],
       order: [["id", "DESC"]],
     });
-    res.json({ resultado: true, activas });
+    const payload = {
+      id: mision.id,
+      contenido: mision.contenido,
+      estado: mision.estado,
+    };
+    res.json({ resultado: true, data: payload });
   } catch (error) {
-    console.log({ resultado: false, error });
+    console.log({ resultado: false, message: error });
   }
 }
 
@@ -107,13 +118,11 @@ export async function deleteMision(req, res) {
 }
 
 export async function updateMision(req, res) {
-  const { id } = req.params;
-  const { contenido, estado } = req.body;
+  const { id, contenido } = req.body;
 
   const misionUpdate = await misionero.update(
     {
       contenido,
-      estado,
     },
     {
       where: { id },

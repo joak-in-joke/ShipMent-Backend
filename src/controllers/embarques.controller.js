@@ -194,6 +194,38 @@ export async function createEmbarque(req, res) {
               ],
             }
           );
+
+          //creo el lcl
+          const createLCL = await datalcl.create(
+            {
+              id_data: newDataEmbarque.id,
+              contenedor,
+              cant_bultos,
+              peso,
+              volumen,
+              lugar_destino,
+            },
+            {
+              fields: [
+                "id_data",
+                "contenedor",
+                "cant_bultos",
+                "peso",
+                "volumen",
+                "lugar_destino",
+              ],
+            },
+            {
+              attributes: ["id"],
+            }
+          );
+          //creo el fcl
+          const createFCL = await datafcl.create({
+            id_data: newDataEmbarque.id,
+            deposito_contenedores,
+            cont_tipo,
+            sello,
+          });
         } else {
           res.json({
             respuesta: false,
@@ -206,12 +238,11 @@ export async function createEmbarque(req, res) {
           message: "No se pudo crear la linea de tiempo",
         });
       }
+
       //creamos el comentario
       if (newDataEmbarque && createTimeline) {
         return res.json({
           message: "Embarque creado Satisfactoriamente",
-          newEmbarque,
-          newDataEmbarque,
         });
       } else {
         console.log(error);

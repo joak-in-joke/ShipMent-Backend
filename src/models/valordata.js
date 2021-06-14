@@ -1,33 +1,33 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
+import sequelize from "sequelize";
+import { database } from "../database/database";
 
-const valordata = database.define('valordata',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
+const valordata = database.define(
+  "valordata",
+  {
+    id: {
+      type: sequelize.INTEGER,
+      primaryKey: true,
     },
-    id_data:{
-        type: sequelize.INTEGER
+    id_data: {
+      type: sequelize.INTEGER,
     },
-    nombre_mercancia:{
-        type: sequelize.TEXT
+    nombre_mercancia: {
+      type: sequelize.TEXT,
     },
-    valor_usd:{
-        type: sequelize.INTEGER
+    valor_usd: {
+      type: sequelize.INTEGER,
     },
-    flete_usd:{
-        type: sequelize.INTEGER
+    flete_usd: {
+      type: sequelize.INTEGER,
     },
-    seguro_usd:{
-        type: sequelize.INTEGER
+    seguro_usd: {
+      type: sequelize.INTEGER,
     },
-    valor_cif:{
-        type: sequelize.INTEGER
-    }
-    },{
-        timestamps: false,
-        tableName: 'valordata'
-    });
+  },
+  {
+    timestamps: false,
+    tableName: "valordata",
+  }
+);
 
 export default valordata;

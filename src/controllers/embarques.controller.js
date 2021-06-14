@@ -9,58 +9,62 @@ import finanza from "../models/finanzas";
 import itemfinanza from "../models/item_finanzas";
 import datalcl from "../models/datalcl";
 import datafcl from "../models/datafcl";
-import transbordo from "../models/transbordoData";
+import transbordo from "../models/trasbordos";
 import documentos from "../models/documentos";
 import documento from "../models/documento";
-import transbordoData from "../models/transbordoData";
 
 export async function createEmbarque(req, res) {
   try {
     const {
+      //embarque
+      tipo_operacion,
       n_operacion,
+      medio_transporte,
       referencia,
       etd,
       eta,
-      rut,
-      medio_transporte,
-      tipo_operacion,
-      intercom,
+
+      //dataEmbarque
+      incoterm,
       exportador,
       importador,
-      embarcador,
+      embarcador, //operador logistico
       agencia_aduana,
+      motonave,
+      puertoembarque,
+      puertodestino,
+      lugardestino,
+      naviera,
+      viaje,
+      valor_cif,
+
       tipo_documento,
       documento,
-      motonave,
-      viaje,
-      naviera,
-      transbordo,
       reserva,
-      fecha_fin,
-      nombre_mercancia,
-      valor_usd,
-      flete_usd,
-      seguro_usd,
-      valor_cif,
+
+      //arreglo de trasbordos
+      trasbordos,
+      //arreglo de mercancias
+      mercancias,
     } = req.body;
     const newEmbarque = await embarques.create(
       {
+        tipo_operacion,
         n_operacion,
         estado: "Origen",
         referencia,
         etd,
         eta,
-        rut,
         medio_transporte,
       },
       {
         fields: [
+          "tipo_operacion",
           "n_operacion",
           "estado",
           "referencia",
           "etd",
           "eta",
-          "rut",
           "medio_transporte",
         ],
         attributes: ["id"],
@@ -70,64 +74,87 @@ export async function createEmbarque(req, res) {
       const newDataEmbarque = await dataembarque.create(
         {
           id_embarque: newEmbarque.id,
-          tipo_operacion,
-          intercom,
+          intercom: incoterm,
           exportador,
           importador,
           embarcador,
           agencia_aduana,
-          tipo_documento,
-          documento,
           motonave,
-          viaje,
+          puertoembarque,
+          puertodestino,
+          lugardestino,
           naviera,
-          transbordo,
+          viaje,
           reserva,
+          tipo_documento,
+          valor_cif,
+          documento,
+
           fecha_inicio: sequelize.literal("CURRENT_TIMESTAMP"),
-          fecha_fin,
         },
         {
           fields: [
             "id_embarque",
-            "tipo_operacion",
             "intercom",
             "exportador",
             "importador",
             "embarcador",
             "agencia_aduana",
+            "motonave",
+            "puertoembarque",
+            "puertodestino",
+            "lugardestino",
+            "naviera",
+            "viaje",
+            "reserva",
             "tipo_documento",
             "documento",
-            "motonave",
-            "viaje",
-            "naviera",
-            "transbordo",
-            "reserva",
+            "valor_cif",
             "fecha_inicio",
-            "fecha_fin",
           ],
           attributes: ["id"],
         }
       );
-      const newValorData = await valordata.create(
-        {
-          id_data: newDataEmbarque.id,
-          nombre_mercancia,
-          valor_usd,
-          flete_usd,
-          seguro_usd,
-          valor_cif,
-        },
-        {
-          fields: [
-            "id_data",
-            "nombre_mercancia",
-            "valor_usd",
-            "flete_usd",
-            "seguro_usd",
-            "valor_cif",
-          ],
-        }
-      );
+      if (mercancias) {
+        //itera segun cuantos datos se importen de mercancias
+        mercancias.map((mercancia) => {
+          const newValorData = valordata.create(
+            {
+              id_data: newDataEmbarque.id,
+              nombre_mercancia: mercancia.nombre_mercancia,
+              valor_usd: mercancia.valor_usd,
+              flete_usd: mercancia.flete_usd,
+              seguro_usd: mercancia.seguro_usd,
+            },
+            {
+              fields: [
+                "id_data",
+                "nombre_mercancia",
+                "valor_usd",
+                "flete_usd",
+                "seguro_usd",
+              ],
+            }
+          );
+        });
+      }
+
+      if (trasbordos) {
+        //itera segun cuantos trasbordos se maneden
+        trasbordos.map((trasbordo) => {
+          const newTrasbordo = transbordo.create(
+            {
+              id_data: newDataEmbarque.id,
+              puerto_transb: trasbordo.puerto,
+              nave: trasbordo.nave,
+              fecha: trasbordo.fecha,
+            },
+            {
+              fields: ["id_embarque", "puerto", "nave", "fecha"],
+            }
+          );
+        });
+      }
 
       //tenemos que crear la linea de tiempo con titulo Origen contenido: a la espera de salir
       const createTimeline = await timeline.create(
@@ -148,44 +175,85 @@ export async function createEmbarque(req, res) {
           },
           attributes: ["id"],
         });
-        const createComentario = await comentarios.create(
-          {
-            id_linea_tiempo: getTimeline.id,
-            titulo: "Origen",
-            contenido: "A la espera de salir",
-            estado: "Activo",
-            creado: sequelize.literal("CURRENT_TIMESTAMP"),
-          },
-          {
-            fields: [
-              "id_linea_tiempo",
-              "titulo",
-              "contenido",
-              "estado",
-              "creado",
-            ],
-          }
-        );
-      }
-      //creamos el comentario
+        if (getTimeline) {
+          const createComentario = await comentarios.create(
+            {
+              id_linea_tiempo: getTimeline.id,
+              titulo: "Origen",
+              contenido: "A la espera de salir",
+              estado: "Activo",
+              creado: sequelize.literal("CURRENT_TIMESTAMP"),
+            },
+            {
+              fields: [
+                "id_linea_tiempo",
+                "titulo",
+                "contenido",
+                "estado",
+                "creado",
+              ],
+            }
+          );
 
-      if (newDataEmbarque && newValorData && createTimeline) {
+          //creo el lcl
+          const createLCL = await datalcl.create(
+            {
+              id_data: newDataEmbarque.id,
+              contenedor,
+              cant_bultos,
+              peso,
+              volumen,
+              lugar_destino,
+            },
+            {
+              fields: [
+                "id_data",
+                "contenedor",
+                "cant_bultos",
+                "peso",
+                "volumen",
+                "lugar_destino",
+              ],
+            },
+            {
+              attributes: ["id"],
+            }
+          );
+          //creo el fcl
+          const createFCL = await datafcl.create({
+            id_data: newDataEmbarque.id,
+            deposito_contenedores,
+            cont_tipo,
+            sello,
+          });
+        } else {
+          res.json({
+            respuesta: false,
+            message: "No se pudo obtener la linea de tiempo",
+          });
+        }
+      } else {
+        res.json({
+          respuesta: false,
+          message: "No se pudo crear la linea de tiempo",
+        });
+      }
+
+      //creamos el comentario
+      if (newDataEmbarque && createTimeline) {
         return res.json({
           message: "Embarque creado Satisfactoriamente",
+        });
+      } else {
+        console.log(error);
+        res.status(500).json({
+          message: "Oops algo salio mal/:",
+
           newEmbarque,
           newValorData,
           newDataEmbarque,
         });
       }
-    } else {
-      console.log(error);
-      res.status(500).json({
-        message: "Oops algo salio mal/:",
-
-        newEmbarque,
-        newValorData,
-        newDataEmbarque,
-      });
     }
   } catch (error) {
     console.log(error);
@@ -871,7 +939,6 @@ export async function getActivos(req, res) {
       "referencia",
       "etd",
       "eta",
-      "rut",
       "medio_transporte",
     ],
     order: [["id", "DESC"]],
@@ -893,8 +960,6 @@ export async function getFinalizados(req, res) {
       "referencia",
       "etd",
       "eta",
-
-      "rut",
       "medio_transporte",
     ],
     order: [["id", "DESC"]],

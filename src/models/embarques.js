@@ -1,37 +1,36 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
+import sequelize from "sequelize";
+import { database } from "../database/database";
 
-const embarques = database.define('embarque',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
+const embarques = database.define(
+  "embarque",
+  {
+    id: {
+      type: sequelize.INTEGER,
+      primaryKey: true,
     },
-    n_operacion:{
-        type: sequelize.INTEGER
+    n_operacion: {
+      type: sequelize.INTEGER,
     },
-    estado:{
-        type: sequelize.TEXT
+    estado: {
+      type: sequelize.TEXT,
     },
-    referencia:{
-        type: sequelize.TEXT
+    referencia: {
+      type: sequelize.TEXT,
     },
-    etd:{
-        type: sequelize.DATE
+    etd: {
+      type: sequelize.DATE,
     },
-    eta:{
-        type: sequelize.DATE
+    eta: {
+      type: sequelize.DATE,
     },
-    rut:{
-        type: sequelize.INTEGER
+    medio_transporte: {
+      type: sequelize.TEXT,
     },
-    medio_transporte:{
-        type: sequelize.TEXT
-    }
-    
-    },{
-        timestamps: false,
-        tableName: 'embarque'
-    });
+  },
+  {
+    timestamps: false,
+    tableName: "embarque",
+  }
+);
 
 export default embarques;

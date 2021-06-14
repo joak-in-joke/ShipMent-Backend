@@ -1,31 +1,31 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database'; 
+import sequelize from "sequelize";
+import { database } from "../database/database";
 
-const trasbordos = database.define('trasbordo',{
+const transbordodata = database.define(
+  "transbordodata",
+  {
     id: {
-        type: sequelize.INTEGER,
-        primaryKey: true
+      type: sequelize.INTEGER,
+      primaryKey: true,
     },
-    puerto: {
-        type: sequelize.TEXT
+    puerto_transb: {
+      type: sequelize.TEXT,
     },
-    nave:{
-        type: sequelize.TEXT
+    nave: {
+      type: sequelize.TEXT,
     },
-    fecha:{
-        type: sequelize.DATE
+    fecha: {
+      type: sequelize.DATE,
     },
-    creado:{
-        type: sequelize.DATE
-    },
-    id_embarque:{
-        type: sequelize.INTEGER
-    }
-},{
-    timestamps: false
-});
 
+    id_data: {
+      type: sequelize.INTEGER,
+    },
+  },
+  {
+    timestamps: false,
+    tableName: "transbordodata",
+  }
+);
 
-
-export default trasbordos;
-
+export default transbordodata;

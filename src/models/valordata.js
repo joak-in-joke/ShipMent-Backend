@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class ValorData extends Model {
     /**
@@ -10,18 +8,24 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      ValorData.belongsTo(models.DataEmbarque, {
+        foreignKey: "id_data",
+        onDelete: "CASCADE",
+      });
     }
-  };
-  ValorData.init({
-    id_data: DataTypes.INTEGER,
-    nombre_mercancia: DataTypes.STRING,
-    valor_usd: DataTypes.NUMERIC,
-    flete_usd: DataTypes.NUMERIC,
-    seguro_usd: DataTypes.NUMERIC
-  }, {
-    sequelize,
-    modelName: 'ValorData',
-  });
+  }
+  ValorData.init(
+    {
+      id_data: DataTypes.INTEGER,
+      nombre_mercancia: DataTypes.STRING,
+      valor_usd: DataTypes.NUMERIC,
+      flete_usd: DataTypes.NUMERIC,
+      seguro_usd: DataTypes.NUMERIC,
+    },
+    {
+      sequelize,
+      modelName: "ValorData",
+    }
+  );
   return ValorData;
 };

@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class TransbordoData extends Model {
     /**
@@ -10,17 +8,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      TransbordoData.belongsTo(models.DataEmbarque, {
+        foreignKey: "id_data",
+        onDelete: "CASCADE",
+      });
+      TransbordoData.belongsTo(models.Puerto, {
+        foreignKey: "id_puerto_transbordo",
+      });
     }
-  };
-  TransbordoData.init({
-    id_data: DataTypes.INTEGER,
-    id_puerto_transbordo: DataTypes.INTEGER,
-    naver_transb: DataTypes.STRING,
-    fecha_transb: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'TransbordoData',
-  });
+  }
+  TransbordoData.init(
+    {
+      id_data: DataTypes.INTEGER,
+      id_puerto_transbordo: DataTypes.INTEGER,
+      naver_transb: DataTypes.STRING,
+      fecha_transb: DataTypes.DATE,
+    },
+    {
+      sequelize,
+      modelName: "TransbordoData",
+    }
+  );
   return TransbordoData;
 };

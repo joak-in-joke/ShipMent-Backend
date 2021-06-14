@@ -1,7 +1,7 @@
 -npx sequelize-cli model:generate --name Permisos --attributes id_usuario:integer,perm_finanzas:boolean,perm_misiones:boolean,perm_superuser:boolean,perm_admin:boolean
 -npx sequelize-cli model:generate --name DataUsuario --attributes id_usuario:integer,nombre:string,apellido:string,rut:numeric,dv:string,email:string,estado:string,cargo:string,ciudad:string,asesor:string,telefono:string,pass:string
 -npx sequelize-cli model:generate --name Usuario --attributes id_permisos:integer,tipo:integer
--npx sequelize-cli model:generate --name Nota --attributes contenido:text,creado:date
+-npx sequelize-cli model:generate --name Nota --attributes id_usuario:integer,contenido:text,creado:date
 -npx sequelize-cli model:generate --name Mision --attributes contenido:text,creado:date
 -npx sequelize-cli model:generate --name ValorData --attributes id_data:integer,nombre_mercancia:string,valor_usd:numeric,flete_usd:numeric,seguro_usd:numeric
 -npx sequelize-cli model:generate --name Embarque --attributes n_operacion:integer,estado:numeric,referencia:string,etd:date,eta:date,media_transporte:string
@@ -22,6 +22,31 @@
 -npx sequelize-cli model:generate --name Finanza --attributes id_embarque:integer,estado:string,total:numeric,descripcion:string
 -npx sequelize-cli model:generate --name OperadorLogistico --attributes nombre:string
 -npx sequelize-cli model:generate --name AgenciaAduana --attributes nombre:string
+
+-npx sequelize-cli seed:generate --name Permisos 
+-npx sequelize-cli seed:generate --name DataUsuario 
+-npx sequelize-cli seed:generate --name Usuario 
+-npx sequelize-cli seed:generate --name Nota 
+-npx sequelize-cli seed:generate --name Mision 
+-npx sequelize-cli seed:generate --name ValorData 
+-npx sequelize-cli seed:generate --name Embarque 
+-npx sequelize-cli seed:generate --name LineaDeTiempo 
+-npx sequelize-cli seed:generate --name ComentariosLTiempo 
+-npx sequelize-cli seed:generate --name DataEmbarque 
+-npx sequelize-cli seed:generate --name Documentos 
+-npx sequelize-cli seed:generate --name Documento 
+-npx sequelize-cli seed:generate --name DocumentoTipos 
+-npx sequelize-cli seed:generate --name TransbordoData 
+-npx sequelize-cli seed:generate --name DataLCL
+-npx sequelize-cli seed:generate --name DataFCL 
+-npx sequelize-cli seed:generate --name Puerto 
+-npx sequelize-cli seed:generate --name Contacto 
+-npx sequelize-cli seed:generate --name CuentaBanco 
+-npx sequelize-cli seed:generate --name ProveedorCliente 
+-npx sequelize-cli seed:generate --name ItemFinanza 
+-npx sequelize-cli seed:generate --name Finanza 
+-npx sequelize-cli seed:generate --name OperadorLogistico
+-npx sequelize-cli seed:generate --name AgenciaAduana 
 
 
 

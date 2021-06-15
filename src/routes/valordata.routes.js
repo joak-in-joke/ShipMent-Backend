@@ -1,7 +1,7 @@
 import { Router } from "express";
 const router = Router();
 
-import { getMercanciasbyId } from "../controllers/valordata.controller";
+import { getMercanciasbyId } from "../controllers/valorData.controller";
 
 //admin/dashboard
 // router.post("/add", createUser);

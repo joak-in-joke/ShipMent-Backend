@@ -12,6 +12,8 @@ import {
   getEstado,
 } from "../controllers/embarques.controller";
 
+import { filterEmbarque } from "../controllers/filtro.controller";
+
 //admin/dashboard
 router.get("/active", getActivos);
 router.get("/finished", getFinalizados);
@@ -24,5 +26,7 @@ router.get("/", getallEmbarques);
 router.post("/create", createEmbarque);
 router.post("/update/:id", updateEmbarques);
 router.post("/delete/:id", deleteEmbarque);
+
+router.post("/filter", filterEmbarque);
 
 export default router;

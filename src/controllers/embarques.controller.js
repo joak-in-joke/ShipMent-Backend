@@ -46,7 +46,20 @@ export async function createEmbarque(req, res) {
       trasbordos,
       //arreglo de mercancias
       mercancias,
+
+      //datos lcl
+      contenedor,
+      cant_bultos,
+      peso,
+      volumen,
+      lugar_destino,
+
+      //datos fcl
+      deposito_contenedores,
+      cont_tipo,
+      sello,
     } = req.body;
+
     const newEmbarque = await embarques.create(
       {
         tipo_operacion,
@@ -115,6 +128,7 @@ export async function createEmbarque(req, res) {
           attributes: ["id"],
         }
       );
+
       if (mercancias) {
         //itera segun cuantos datos se importen de mercancias
         mercancias.map((mercancia) => {
@@ -145,15 +159,62 @@ export async function createEmbarque(req, res) {
           const newTrasbordo = transbordo.create(
             {
               id_data: newDataEmbarque.id,
-              puerto_transb: trasbordo.puerto,
+              puerto_transb: trasbordo.puerto_transb,
               nave: trasbordo.nave,
               fecha: trasbordo.fecha,
             },
             {
-              fields: ["id_embarque", "puerto", "nave", "fecha"],
+              fields: [
+                "id_data",
+                "id_embarque",
+                "puerto_transb",
+                "nave",
+                "fecha",
+              ],
             }
           );
         });
+      }
+      //crear el lcl y el fcl segun el medio de transporte
+
+      if (medio_transporte == "LCL") {
+        //creo el lcl
+        const createLCL = await datalcl.create(
+          {
+            id_data: newDataEmbarque.id,
+            contenedor,
+            cant_bultos,
+            peso,
+            volumen,
+            lugar_destino,
+          },
+          {
+            fields: [
+              "id_data",
+              "contenedor",
+              "cant_bultos",
+              "peso",
+              "volumen",
+              "lugar_destino",
+            ],
+          },
+          {
+            attributes: ["id"],
+          }
+        );
+      } else if (medio_transporte == "FCL") {
+        //creo el fcl
+        const createFCL = await datafcl.create(
+          {
+            id_data: newDataEmbarque.id,
+            deposito_contenedores,
+            cont_tipo,
+            sello,
+          },
+          {
+            fields: ["id_data", "deposito_contenedores", "cont_tipo", "sello"],
+          }
+        );
       }
 
       //tenemos que crear la linea de tiempo con titulo Origen contenido: a la espera de salir
@@ -194,38 +255,6 @@ export async function createEmbarque(req, res) {
               ],
             }
           );
-
-          //creo el lcl
-          const createLCL = await datalcl.create(
-            {
-              id_data: newDataEmbarque.id,
-              contenedor,
-              cant_bultos,
-              peso,
-              volumen,
-              lugar_destino,
-            },
-            {
-              fields: [
-                "id_data",
-                "contenedor",
-                "cant_bultos",
-                "peso",
-                "volumen",
-                "lugar_destino",
-              ],
-            },
-            {
-              attributes: ["id"],
-            }
-          );
-          //creo el fcl
-          const createFCL = await datafcl.create({
-            id_data: newDataEmbarque.id,
-            deposito_contenedores,
-            cont_tipo,
-            sello,
-          });
         } else {
           res.json({
             respuesta: false,
@@ -239,22 +268,52 @@ export async function createEmbarque(req, res) {
         });
       }
 
-      //creamos el comentario
-      if (newDataEmbarque && createTimeline) {
-        return res.json({
-          message: "Embarque creado Satisfactoriamente",
-        });
-      } else {
-        console.log(error);
-        res.status(500).json({
-          message: "Oops algo salio mal/:",
+      const payload = {
+        tipo_operacion: newEmbarque.tipo_operacion,
+        n_operacion: newEmbarque.n_operacion,
+        medio_transporte: newEmbarque.medio_transporte,
+        referencia: newEmbarque.referencia,
+        etd: newEmbarque.etd,
+        eta: newEmbarque.eta,
 
-          newEmbarque,
-          newValorData,
-          newDataEmbarque,
-        });
-      }
+        //dataEmbarque
+        incoterm: newDataEmbarque.intercom,
+        exportador: newDataEmbarque.exportador,
+        importador: newDataEmbarque.importador,
+        embarcador: newDataEmbarque.embarcador, //operador logistico
+        agencia_aduana: newDataEmbarque.agencia_aduana,
+        motonave: newDataEmbarque.motonave,
+        puertoembarque: newDataEmbarque.puertoembarque,
+        puertodestino: newDataEmbarque.puertodestino,
+        lugardestino: newDataEmbarque.lugardestino,
+        naviera: newDataEmbarque.naviera,
+        viaje: newDataEmbarque.viaje,
+        valor_cif: newDataEmbarque.valor_cif,
+
+        tipo_documento: newDataEmbarque.tipo_documento,
+        documento: newDataEmbarque.documento,
+        reserva: newDataEmbarque.reserva,
+
+        // //arreglo de trasbordos
+        // trasbordos,
+        // //arreglo de mercancias
+        // mercancias,
+      };
+
+      res.json({ respuesta: true, payload });
     }
+
+    // //creamos el comentario
+    // if (newDataEmbarque && createTimeline) {
+    //   return res.json({
+    //     message: "Embarque creado Satisfactoriamente",
+    //   });
+    // } else {
+    //   console.log(error);
+    //   res.status(500).json({
+    //     message: "Oops algo salio mal/:",
+    //   });
+    // }
   } catch (error) {
     console.log(error);
   }
@@ -276,27 +335,27 @@ export async function getEmbarque(req, res) {
         },
       });
 
-      const valorEmbarque = await valordata.findOne({
+      const valorEmbarque = await valordata.findAll({
         where: {
-          id_data: id,
+          id_data: datoEmbarque.id,
         },
       });
 
-      const transbordoEmbarque = await transbordoData.findOne({
+      const transbordoEmbarque = await transbordo.findAll({
         where: {
-          id_data: id,
+          id_data: datoEmbarque.id,
         },
       });
       if (embarque.medio_transporte === "LCL") {
         data_transporte = await datalcl.findOne({
           where: {
-            id_data: id,
+            id_data: datoEmbarque.id,
           },
         });
       } else if (embarque.medio_transporte === "FCL") {
         data_transporte = await datafcl.findOne({
           where: {
-            id_data: id,
+            id_data: datoEmbarque.id,
           },
         });
       }
@@ -311,13 +370,16 @@ export async function getEmbarque(req, res) {
         eta: embarque.eta,
         medio_transporte: embarque.medio_transporte,
 
-        incoterm: datoEmbarque.intercom,
-        exportador: datoEmbarque.inteexportadorrcom,
+        intercom: datoEmbarque.intercom,
+        exportador: datoEmbarque.exportador,
         importador: datoEmbarque.importador,
         embarcador: datoEmbarque.embarcador,
         agencia_aduana: datoEmbarque.agencia_aduana,
         tipo_documento: datoEmbarque.tipo_documento,
         documento: datoEmbarque.documento,
+        puertoembarque: datoEmbarque.puertoembarque,
+        puertodestino: datoEmbarque.puertodestino,
+        lugardestino: datoEmbarque.lugardestino,
         motonave: datoEmbarque.motonave,
         viaje: datoEmbarque.viaje,
         naviera: datoEmbarque.naviera,
@@ -325,12 +387,14 @@ export async function getEmbarque(req, res) {
         reserva: datoEmbarque.reserva,
         fecha_inicio: datoEmbarque.fecha_inicio,
         fecha_fin: datoEmbarque.fecha_fin,
+        valor_cif: datoEmbarque.valor_cif,
 
-        puerto_transb: transbordoEmbarque.puerto_transb,
-        naver_transb: transbordoEmbarque.naver_transb,
-        fecha_transb: transbordoEmbarque.fecha,
+        // puerto_transb: transbordoEmbarque.puerto_transb,
+        // naver_transb: transbordoEmbarque.naver_transb,
+        // fecha_transb: transbordoEmbarque.fecha,
         data_transporte: data_transporte,
         valorData: valorEmbarque,
+        transbordoEmbarque: transbordoEmbarque,
       };
       res.json({ resultado: true, data: payload }).status(200);
     } else {

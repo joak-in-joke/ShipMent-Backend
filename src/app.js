@@ -38,7 +38,7 @@ import timeline from "./routes/lineadetiempo.routes";
 import proveedores from "./routes/proveedores.routes";
 import clientes from "./routes/cliente.routes";
 import user from "./routes/usuario.routes";
-
+import valordata from "./routes/valordata.routes";
 //routes
 
 app.use(cors());
@@ -50,7 +50,7 @@ app.use("/timeline", timeline);
 app.use("/provider", proveedores);
 app.use("/client", clientes);
 app.use("/users", user);
-
+app.use("/valordata", valordata);
 //public
 
 //app.use(express.static('../public'));

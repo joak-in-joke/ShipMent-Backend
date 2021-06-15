@@ -11,9 +11,7 @@ const dataembarque = database.define(
     id_embarque: {
       type: sequelize.INTEGER,
     },
-    tipo_operacion: {
-      type: sequelize.TEXT,
-    },
+
     intercom: {
       type: sequelize.TEXT,
     },
@@ -35,6 +33,15 @@ const dataembarque = database.define(
     documento: {
       type: sequelize.TEXT,
     },
+    puertoembarque: {
+      type: sequelize.TEXT,
+    },
+    puertodestino: {
+      type: sequelize.TEXT,
+    },
+    lugardestino: {
+      type: sequelize.TEXT,
+    },
     motonave: {
       type: sequelize.TEXT,
     },
@@ -44,12 +51,13 @@ const dataembarque = database.define(
     naviera: {
       type: sequelize.TEXT,
     },
-    transbordo: {
-      type: sequelize.BOOLEAN,
-    },
     reserva: {
       type: sequelize.TEXT,
     },
+    valor_cif: {
+      type: sequelize.INTEGER,
+    },
+
     fecha_inicio: {
       type: sequelize.DATE,
     },

@@ -12,7 +12,6 @@ import datafcl from "../models/datafcl";
 import transbordo from "../models/trasbordos";
 import documentos from "../models/documentos";
 import documento from "../models/documento";
-import transbordoData from "../models/transbordoData";
 
 export async function createEmbarque(req, res) {
   try {
@@ -304,6 +303,7 @@ export async function getEmbarque(req, res) {
 
       const payload = {
         id: embarque.id,
+        tipo_operacion: embarque.tipo_operacion,
         n_operacion: embarque.n_operacion,
         estado: embarque.estado,
         referencia: embarque.referencia,
@@ -311,8 +311,7 @@ export async function getEmbarque(req, res) {
         eta: embarque.eta,
         medio_transporte: embarque.medio_transporte,
 
-        tipo_operacion: datoEmbarque.tipo_operacion,
-        intercom: datoEmbarque.intercom,
+        incoterm: datoEmbarque.intercom,
         exportador: datoEmbarque.inteexportadorrcom,
         importador: datoEmbarque.importador,
         embarcador: datoEmbarque.embarcador,
@@ -478,7 +477,7 @@ export async function updateEmbarques(req, res) {
       eta,
       medio_transporte,
       tipo_operacion,
-      intercom,
+      incoterm,
       exportador,
       importador,
       embarcador,
@@ -513,6 +512,7 @@ export async function updateEmbarques(req, res) {
     if (getEmbarque) {
       const EmbarquesUpdate = await embarques.update(
         {
+          tipo_operacion,
           n_operacion,
           estado,
           referencia,
@@ -645,6 +645,21 @@ export async function updateEmbarques(req, res) {
             },
           }
         );
+        //cambio el estado de el embarque
+        const setEmbarqueState = await embarque.update(
+          {
+            estado: "Finalizado",
+          },
+          {
+            where: {
+              estado: "Llegado",
+            },
+          }
+        );
+        //del dataEmbarque le agrego el tiempo_fin
+        const setTime = await dataembarque.update({
+          fecha_fin: sequelize.literal("CURRENT_TIMESTAMP"),
+        });
         //creo un comentario  linea de tiempo para Abordo
         const createComTimeline = await comentarios.create(
           {
@@ -669,8 +684,7 @@ export async function updateEmbarques(req, res) {
 
       const dataEmbarqueUpdate = await dataembarque.update(
         {
-          tipo_operacion,
-          intercom,
+          intercom: incoterm,
           exportador,
           importador,
           embarcador,
@@ -683,6 +697,7 @@ export async function updateEmbarques(req, res) {
           transbordo,
           reserva,
           fecha_fin,
+          valor_cif,
         },
         {
           where: { id_embarque: id },
@@ -694,7 +709,6 @@ export async function updateEmbarques(req, res) {
           valor_usd,
           flete_usd,
           seguro_usd,
-          valor_cif,
         },
         {
           where: { id_data: id },

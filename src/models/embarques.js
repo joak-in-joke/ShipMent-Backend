@@ -8,6 +8,9 @@ const embarques = database.define(
       type: sequelize.INTEGER,
       primaryKey: true,
     },
+    tipo_operacion: {
+      type: sequelize.TEXT,
+    },
     n_operacion: {
       type: sequelize.INTEGER,
     },

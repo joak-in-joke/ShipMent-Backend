@@ -975,8 +975,6 @@ export async function getFinalizados(req, res) {
       "referencia",
       "etd",
       "eta",
-
-      "rut",
       "medio_transporte",
     ],
     order: [["id", "DESC"]],

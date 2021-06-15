@@ -57,7 +57,6 @@ const dataembarque = database.define(
     valor_cif: {
       type: sequelize.INTEGER,
     },
-
     fecha_inicio: {
       type: sequelize.DATE,
     },

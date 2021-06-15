@@ -311,3 +311,16 @@ export async function updateProvider(req, res) {
     message: "Proveedor update Succesfully! (: ",
   });
 }
+
+//obtener el listado de id y nombres de proveedores
+export async function getProviderList(req, res) {
+  try {
+    const getprovider = await proveedor.findAll({
+      attributes: ["id", "nombre"],
+    });
+
+    res.json({ resultado: true, getprovider });
+  } catch (e) {
+    res.json({ resultado: false, error: e });
+  }
+}

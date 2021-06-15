@@ -12,6 +12,7 @@ import datafcl from "../models/datafcl";
 import transbordo from "../models/trasbordos";
 import documentos from "../models/documentos";
 import documento from "../models/documento";
+import transbordoData from "../models/transbordoData";
 
 export async function createEmbarque(req, res) {
   try {

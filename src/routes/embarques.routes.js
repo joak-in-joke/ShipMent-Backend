@@ -12,8 +12,6 @@ import {
   getEstado,
 } from "../controllers/embarques.controller";
 
-import { filterEmbarque } from "../controllers/filtro.controller";
-
 import {
   getTrasbordos,
   deleteTrasbordo,

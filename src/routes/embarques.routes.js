@@ -17,6 +17,7 @@ import {
   deleteTrasbordo,
 } from "../controllers/trasbordo.controller";
 
+
 //admin/dashboard
 router.get("/active", getActivos);
 router.get("/finished", getFinalizados);
@@ -33,5 +34,7 @@ router.get("/", getallEmbarques);
 router.post("/create", createEmbarque);
 router.post("/update/:id", updateEmbarques);
 router.post("/delete/", deleteEmbarque);
+
+router.post("/filter", filterEmbarque);
 
 export default router;

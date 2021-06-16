@@ -2,6 +2,14 @@ import sequelize from "sequelize";
 import user from "../models/usuario";
 import datauser from "../models/datausuario";
 import permisos from "../models/permisos";
+import jwt from "jsonwebtoken";
+import config from "../config";
+import bcrypt from "bcryptjs";
+
+const encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+};
 
 export async function createUser(req, res) {
   const {
@@ -18,71 +26,84 @@ export async function createUser(req, res) {
     permission,
   } = req.body;
   try {
-    const newUser = await user.create(
-      {
-        tipo,
-      },
-      {
-        fields: ["tipo"],
-        attributes: ["id"],
-      }
-    );
-    if (newUser) {
-      datauser.create(
-        {
-          id_usuario: newUser.id,
-          nombre,
-          apellido,
-          rut,
-          dv,
-          mail,
-          cargo,
-          asesor,
-          telefono,
-          pass,
-        },
-        {
-          fields: [
-            "id_usuario",
-            "nombre",
-            "apellido",
-            "rut",
-            "dv",
-            "cargo",
-            "asesor",
-            "telefono",
-            "pass",
-          ],
-        }
-      );
-      permisos.create(
-        {
-          id_usuario: newUser.id,
-          perm_finanza: permission.finanzas,
-          perm_misiones: permission.misiones,
-          perm_superuser: permission.superuser,
-          perm_admin: permission.admin,
-        },
-        {
-          fields: [
-            "id_usuario",
-            "perm_finanza",
-            "perm_misiones",
-            "perm_superuser",
-            "perm_admin",
-          ],
-        }
-      );
-      return res.json({
-        respuesta: true,
-        message: "User created",
-      });
+    const getMail = await datauser.findOne({
+      where: { mail },
+    });
+    if (getMail) {
+      res.json("el mail ingresado ya existe");
     } else {
-      console.log(error);
-      res.status(500).json({
-        respuesta: false,
-        message: "Oops algo salio mal/:",
-      });
+      const newUser = await user.create(
+        {
+          tipo,
+        },
+        {
+          fields: ["tipo"],
+          attributes: ["id"],
+        }
+      );
+      if (newUser) {
+        const user_token = jwt.sign({ id: newUser.id }, config.SECRET, {
+          expiresIn: 120,
+        });
+
+        datauser.create(
+          {
+            id_usuario: newUser.id,
+            nombre,
+            apellido,
+            rut,
+            dv,
+            mail,
+            cargo,
+            asesor,
+            telefono,
+            pass: await encryptPassword(pass),
+          },
+          {
+            fields: [
+              "id_usuario",
+              "nombre",
+              "apellido",
+              "rut",
+              "dv",
+              "mail",
+              "cargo",
+              "asesor",
+              "telefono",
+              "pass",
+            ],
+          }
+        );
+        permisos.create(
+          {
+            id_usuario: newUser.id,
+            perm_finanza: permission.finanzas,
+            perm_misiones: permission.misiones,
+            perm_superuser: permission.superuser,
+            perm_admin: permission.admin,
+          },
+          {
+            fields: [
+              "id_usuario",
+              "perm_finanza",
+              "perm_misiones",
+              "perm_superuser",
+              "perm_admin",
+            ],
+          }
+        );
+        return res.json({
+          respuesta: true,
+          message: "User created",
+          token: user_token,
+        });
+      } else {
+        console.log(error);
+        res.status(500).json({
+          respuesta: false,
+          message: "Oops algo salio mal/:",
+        });
+      }
     }
   } catch (error) {
     console.log(error);
@@ -260,7 +281,7 @@ export async function updateUser(req, res) {
       cargo,
       asesor,
       telefono,
-      pass,
+      pass: await encryptPassword(pass),
     },
     {
       where: { id_usuario: id },

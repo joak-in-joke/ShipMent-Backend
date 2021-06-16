@@ -12,17 +12,28 @@ import {
   getEstado,
 } from "../controllers/embarques.controller";
 
+import { filterEmbarque } from "../controllers/filtro.controller";
+
+import {
+  getTrasbordos,
+  deleteTrasbordo,
+} from "../controllers/trasbordo.controller";
+
 //admin/dashboard
 router.get("/active", getActivos);
 router.get("/finished", getFinalizados);
 router.get("/state", getEstado);
 // router.post("/:id", setEstado);
-router.get("/:id", getEmbarque);
 
+//TRASBORDOS
+router.get("/trasbordo/:id", getTrasbordos);
+router.post("/trasbordo/delete/", deleteTrasbordo);
+
+router.get("/:id", getEmbarque);
 router.get("/", getallEmbarques);
 
 router.post("/create", createEmbarque);
 router.post("/update/:id", updateEmbarques);
-router.post("/delete/:id", deleteEmbarque);
+router.post("/delete/", deleteEmbarque);
 
 export default router;

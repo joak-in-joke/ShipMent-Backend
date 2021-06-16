@@ -88,6 +88,10 @@ export const signIn = async (req, res) => {
       "rut",
       "dv",
       "pass",
+      "mail",
+      "asesor",
+      "telefono",
+      "cargo",
     ],
   });
   if (user) {
@@ -110,6 +114,10 @@ export const signIn = async (req, res) => {
         nombre: user.nombre,
         apellido: user.apellido,
         rut: user.rut + user.dv,
+        mail: user.mail,
+        telefono: user.telefono,
+        asesor: user.asesor,
+        cargo: user.cargo,
         permisos: codRol,
       };
       bool = true;

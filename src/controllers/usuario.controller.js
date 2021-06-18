@@ -169,7 +169,7 @@ export async function getUser(req, res) {
         nombre: finddatauser.nombre,
         apellido: finddatauser.apellido,
         rut: finddatauser.rut,
-        dv: finddatauser.tidvpo,
+        dv: finddatauser.dv,
         mail: finddatauser.mail,
         estado: finddatauser.estado,
         cargo: finddatauser.cargo,
@@ -257,8 +257,8 @@ export async function updateUser(req, res) {
     cargo,
     asesor,
     telefono,
-    pass,
-    permission,
+    // pass,
+    //permission,
   } = req.body;
 
   const updateUser = await user.update(
@@ -281,26 +281,70 @@ export async function updateUser(req, res) {
       cargo,
       asesor,
       telefono,
-      pass: await encryptPassword(pass),
+      // pass: await encryptPassword(pass),
     },
     {
       where: { id_usuario: id },
     }
   );
-  const UpdatePermisos = permisos.update(
-    {
-      perm_finanza: permission.finanzas,
-      perm_misiones: permission.misiones,
-      perm_superuser: permission.superuser,
-      perm_admin: permission.admin,
-    },
-    {
-      where: { id_usuario: id },
-    }
-  );
+  // const UpdatePermisos = permisos.update(
+  //   {
+  //     perm_finanza: permission.finanzas,
+  //     perm_misiones: permission.misiones,
+  //     perm_superuser: permission.superuser,
+  //     perm_admin: permission.admin,
+  //   },
+  //   {
+  //     where: { id_usuario: id },
+  //   }
+  // );
 
   res.json({
     respuesta: true,
     message: "User update Succesfully! (: ",
   });
+}
+
+const comparePassword = async (password, receivePassword) => {
+  return await bcrypt.compare(password, receivePassword);
+};
+
+export async function updatePassword(req, res) {
+  const { id, password, newPassword } = req.body;
+
+  //busco el man
+  const getuser = await user.findOne({
+    where: {
+      id,
+    },
+  });
+  //si encuentra comparo las pass
+  if (getuser) {
+    //busco el datauser
+    const getdatauser = await datauser.findOne({
+      where: {
+        id_usuario: getuser.id,
+      },
+    });
+    //const matchPassword = await comparePassword(pass, user.pass);
+    //si las pass coinciden chiao
+    //if (matchPassword) {
+    if (getdatauser.pass === password) {
+      //getdatauser.pass = encryptPassword(newpass)
+      const updatePassword = await datauser.update(
+        {
+          pass: newPassword,
+        },
+        {
+          where: {
+            id_usuario: getuser.id,
+          },
+        }
+      );
+
+      res.json({ respuesta: true, message: "contraseña modificada" });
+    } else {
+      res.json({ respuesta: false, message: "las contraseñas no coinciden" });
+    }
+  }
 }

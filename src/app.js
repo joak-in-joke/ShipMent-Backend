@@ -2,6 +2,7 @@ import "@babel/polyfill";
 var cors = require("cors");
 
 const express = require("express");
+const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
 //const path = require('path');
 //const cors = require('cors');
@@ -51,6 +52,7 @@ app.use("/provider", proveedores);
 app.use("/client", clientes);
 app.use("/users", user);
 app.use("/valordata", valordata);
+app.use(fileUpload());
 //public
 
 //app.use(express.static('../public'));

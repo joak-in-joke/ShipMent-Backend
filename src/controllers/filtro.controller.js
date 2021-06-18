@@ -8,12 +8,12 @@ export async function filterEmbarque(req, res) {
     case "id":
       query = {
         where: {
-          id_embarque: busqueda,
+          id: busqueda,
         },
       };
       break;
 
-    case "status":
+    case "estado":
       query = {
         where: {
           estado: busqueda,
@@ -46,7 +46,7 @@ export async function filterEmbarque(req, res) {
   }
 
   try {
-    const embarque = await embarques.findOne(query);
+    const embarque = await embarques.findAll(query);
     res.json(embarque);
   } catch (error) {
     console.log(error);

@@ -34,7 +34,7 @@ router.get("/", getallEmbarques);
 
 router.post("/create", createEmbarque);
 router.post("/update/:id", updateEmbarques);
-router.post("/delete/", deleteEmbarque);
+router.post("/delete", deleteEmbarque);
 
 router.post("/filter", filterEmbarque);
 

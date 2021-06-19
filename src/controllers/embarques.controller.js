@@ -64,7 +64,7 @@ export async function createEmbarque(req, res) {
       {
         tipo_operacion,
         n_operacion,
-        estado: "Origen",
+        estado: "origen",
         referencia,
         etd,
         eta,
@@ -387,14 +387,11 @@ export async function getEmbarque(req, res) {
         reserva: datoEmbarque.reserva,
         fecha_inicio: datoEmbarque.fecha_inicio,
         fecha_fin: datoEmbarque.fecha_fin,
-        valor_cif: datoEmbarque.valor_cif,
 
-        // puerto_transb: transbordoEmbarque.puerto_transb,
-        // naver_transb: transbordoEmbarque.naver_transb,
-        // fecha_transb: transbordoEmbarque.fecha,
-        data_transporte: data_transporte,
-        valorData: valorEmbarque,
-        transbordoEmbarque: transbordoEmbarque,
+        data_transporte,
+
+        mercancias: valorEmbarque,
+        trasbordos: transbordoEmbarque,
       };
       res.json({ resultado: true, data: payload }).status(200);
     } else {
@@ -795,189 +792,6 @@ export async function updateEmbarques(req, res) {
     console.log(error);
   }
 }
-
-// export async function setEstado(req, res) {
-//   const { id } = req.params;
-//   const { estado } = req.body;
-//   try {
-//     //primero busco el embarque con el id
-//     const getEmbarque = await embarques.findOne(
-//       {
-//         where: {
-//           id,
-//         },
-//       },
-//       {
-//         attributes: ["id", "estado"],
-//       }
-//     );
-
-//     //si existe el id cambio el estado y completo la actividad anterior
-//     if (getEmbarque) {
-//       //cambio el estado del embarque
-//       const setState = await embarques.update(
-//         {
-//           estado,
-//         },
-//         {
-//           where: { id },
-//         }
-//       );
-
-//       //dependiendo del estado al que cambio es el comentario que creo
-
-//       //si el estado actual es origen y pasa a Abordo
-//       if (getEmbarque.estado == "Origen " && estado == "Abordo") {
-//         //obtengo el id de la linea de tiempo para crear el comentario
-//         const getTimelineId = await timeline.findOne(
-//           {
-//             where: {
-//               id_embarque: id,
-//             },
-//           },
-//           {
-//             attributes: ["id"],
-//           }
-//         );
-
-//         //cambio el estado de la linea de tiempo anterior a finalizado
-//         const setTimelineState = await comtimeline.update(
-//           {
-//             estado: "Finalizado",
-//           },
-//           {
-//             where: {
-//               estado: "Origen",
-//             },
-//           }
-//         );
-//         //creo un comentario  linea de tiempo para Abordo
-//         const createComTimeline = await comtimeline.create(
-//           {
-//             id_linea_tiempo: getTimelineId.id,
-//             titulo: "Abordo",
-//             Contenido: "Viajando a destino",
-//             estado: "Activo",
-//             creado: sequelize.literal("CURRENT_TIMESTAMP"),
-//           },
-//           {
-//             fields: [
-//               "id_linea_tiempo",
-//               "titulo",
-//               "contenido",
-//               "estado",
-//               "creado",
-//             ],
-//           }
-//         );
-//         res.json({ Respuesta: "Estado cambiado a Abordo" });
-//       }
-
-//       //si el estado actual es Abordo y pasa a Llegado
-//       else if (getEmbarque.estado == "Abordo " && estado == "Llegado") {
-//         //obtengo el id de la linea de tiempo para crear el comentario
-//         const getTimelineId = await timeline.findOne(
-//           {
-//             where: {
-//               id_embarque: id,
-//             },
-//           },
-//           {
-//             attributes: ["id"],
-//           }
-//         );
-
-//         //cambio el estado de la linea de tiempo anterior a finalizado
-//         const setTimelineState = await comtimeline.update(
-//           {
-//             estado: "Finalizado",
-//           },
-//           {
-//             where: {
-//               estado: "Abordo",
-//             },
-//           }
-//         );
-//         //creo un comentario  linea de tiempo para Abordo
-//         const createComTimeline = await comtimeline.create(
-//           {
-//             id_linea_tiempo: getTimelineId.id,
-//             titulo: "Llegado",
-//             Contenido: "Llego a destino",
-//             estado: "Activo",
-//             creado: sequelize.literal("CURRENT_TIMESTAMP"),
-//           },
-//           {
-//             fields: [
-//               "id_linea_tiempo",
-//               "titulo",
-//               "contenido",
-//               "estado",
-//               "creado",
-//             ],
-//           }
-//         );
-//         res.json({ Respuesta: "Estado cambiado a Llegado" });
-//       }
-
-//       //si el estado actual es Llegado y pasa a Origen
-//       else if (getEmbarque.estado == "Llegado " && estado == "Finalizado") {
-//         //obtengo el id de la linea de tiempo para crear el comentario
-//         const getTimelineId = await timeline.findOne(
-//           {
-//             where: {
-//               id_embarque: id,
-//             },
-//           },
-//           {
-//             attributes: ["id"],
-//           }
-//         );
-
-//         //cambio el estado de la linea de tiempo anterior a finalizado
-//         const setTimelineState = await comtimeline.update(
-//           {
-//             estado: "Finalizado",
-//           },
-//           {
-//             where: {
-//               estado: "Llegado",
-//             },
-//           }
-//         );
-//         //creo un comentario  linea de tiempo para Abordo
-//         const createComTimeline = await comtimeline.create(
-//           {
-//             id_linea_tiempo: getTimelineId.id,
-//             titulo: "Finalizado",
-//             Contenido: "Emabarque finalizado!",
-//             estado: "Finalizado",
-//             creado: sequelize.literal("CURRENT_TIMESTAMP"),
-//           },
-//           {
-//             fields: [
-//               "id_linea_tiempo",
-//               "titulo",
-//               "contenido",
-//               "estado",
-//               "creado",
-//             ],
-//           }
-//         );
-//         res.json({ Respuesta: "Embarque Finalizado" });
-//       }
-
-//       //se deberian crear casos para retroceder? si elimino una tarjeta paso al estado anterior?
-//     } else {
-//       res.json({
-//         respuesta: false,
-//         message: "no se ha encontrado el embarque",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
 
 export async function getEstado(req, res) {
   const allActivos = await embarques.findAll({

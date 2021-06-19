@@ -1,13 +1,10 @@
 import { Router } from "express";
 const router = Router();
 
-
 import {
   getMercanciasbyId,
   deleteMercancia,
-} from "../controllers/valordata.controller";
-
-
+} from "../controllers/valorData.controller";
 
 //admin/dashboard
 // router.post("/add", createUser);

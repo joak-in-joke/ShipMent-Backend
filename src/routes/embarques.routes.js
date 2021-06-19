@@ -33,7 +33,7 @@ router.get("/:id", getEmbarque);
 router.get("/", getallEmbarques);
 
 router.post("/create", createEmbarque);
-router.post("/update/:id", updateEmbarques);
+router.post("/update/", updateEmbarques);
 router.post("/delete/", deleteEmbarque);
 
 router.post("/filter", filterEmbarque);

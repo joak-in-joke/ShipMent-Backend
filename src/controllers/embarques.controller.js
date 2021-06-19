@@ -64,7 +64,7 @@ export async function createEmbarque(req, res) {
       {
         tipo_operacion,
         n_operacion,
-        estado: "Origen",
+        estado: "origen",
         referencia,
         etd,
         eta,
@@ -387,14 +387,11 @@ export async function getEmbarque(req, res) {
         reserva: datoEmbarque.reserva,
         fecha_inicio: datoEmbarque.fecha_inicio,
         fecha_fin: datoEmbarque.fecha_fin,
-        valor_cif: datoEmbarque.valor_cif,
 
-        // puerto_transb: transbordoEmbarque.puerto_transb,
-        // naver_transb: transbordoEmbarque.naver_transb,
-        // fecha_transb: transbordoEmbarque.fecha,
-        data_transporte: data_transporte,
-        valorData: valorEmbarque,
-        transbordoEmbarque: transbordoEmbarque,
+        data_transporte,
+
+        mercancias: valorEmbarque,
+        trasbordos: transbordoEmbarque,
       };
       res.json({ resultado: true, data: payload }).status(200);
     } else {
@@ -532,33 +529,50 @@ export async function deleteEmbarque(req, res) {
 
 export async function updateEmbarques(req, res) {
   try {
-    const { id } = req.params;
     const {
+      id,
+      tipo_operacion,
       n_operacion,
+      medio_transporte,
       referencia,
-      estado,
       etd,
       eta,
-      medio_transporte,
-      tipo_operacion,
+      estado,
+
+      //dataEmbarque
       incoterm,
       exportador,
       importador,
-      embarcador,
+      embarcador, //operador logistico
       agencia_aduana,
+      motonave,
+      puertoembarque,
+      puertodestino,
+      lugardestino,
+      naviera,
+      viaje,
+      valor_cif,
+
       tipo_documento,
       documento,
-      motonave,
-      viaje,
-      naviera,
-      transbordo,
       reserva,
-      fecha_fin,
-      nombre_mercancia,
-      valor_usd,
-      flete_usd,
-      seguro_usd,
-      valor_cif,
+
+      //arreglo de trasbordos
+      trasbordos,
+      //arreglo de mercancias
+      mercancias,
+
+      //datos lcl
+      contenedor,
+      cant_bultos,
+      peso,
+      volumen,
+      lugar_destino,
+
+      //datos fcl
+      deposito_contenedores,
+      cont_tipo,
+      sello,
     } = req.body;
 
     const getEmbarque = await embarques.findOne(
@@ -574,6 +588,11 @@ export async function updateEmbarques(req, res) {
 
     //si existe el id cambio el estado y completo la actividad anterior
     if (getEmbarque) {
+      const getDataEmbarque = await dataembarque.findOne({
+        where: {
+          id_embarque: id,
+        },
+      });
       const EmbarquesUpdate = await embarques.update(
         {
           tipo_operacion,
@@ -746,7 +765,7 @@ export async function updateEmbarques(req, res) {
         res.json({ Respuesta: "Embarque Finalizado" });
       }
 
-      const dataEmbarqueUpdate = await dataembarque.update(
+      const dataembarqueupdate = await dataembarque.update(
         {
           intercom: incoterm,
           exportador,
@@ -756,228 +775,187 @@ export async function updateEmbarques(req, res) {
           tipo_documento,
           documento,
           motonave,
+          puertoembarque,
+          puertodestino,
+          lugardestino,
           viaje,
           naviera,
-          transbordo,
           reserva,
-          fecha_fin,
           valor_cif,
         },
         {
           where: { id_embarque: id },
         }
       );
-      const valorDataUpdate = await valordata.update(
-        {
-          nombre_mercancia,
-          valor_usd,
-          flete_usd,
-          seguro_usd,
-        },
-        {
-          where: { id_data: id },
-        }
-      );
+      const caca = getDataEmbarque.id;
+
+      if (mercancias) {
+        //se eliminan las mercancias actuales
+        const deleteMercancias = await valordata.destroy({
+          where: {
+            id_data: getDataEmbarque.id,
+          },
+        });
+
+        //itera segun cuantos datos se importen de mercancias
+        mercancias.map((mercancia) => {
+          const valorDataUpdate = valordata.create(
+            {
+              id_data: getDataEmbarque.id,
+              nombre_mercancia: mercancia.nombre_mercancia,
+              valor_usd: mercancia.valor_usd,
+              flete_usd: mercancia.flete_usd,
+              seguro_usd: mercancia.seguro_usd,
+            },
+            {
+              fields: [
+                "id_data",
+                "nombre_mercancia",
+                "valor_usd",
+                "flete_usd",
+                "seguro_usd",
+              ],
+            },
+            console.log("creaoMerca")
+          );
+        });
+      }
+
+      if (trasbordos) {
+        console.log("no se que hago aca");
+        //se eliminan las mercancias actuales
+        const deleteTrasbordos = await transbordo.destroy({
+          where: {
+            id_data: getDataEmbarque.id,
+          },
+        });
+
+        //itera segun cuantos trasbordos se maneden
+        trasbordos.map((trasbordo) => {
+          const createTrasbordo = transbordo.create(
+            {
+              id_data: getDataEmbarque.id,
+              puerto_transb: trasbordo.puerto_transb,
+              nave: trasbordo.nave,
+              fecha: trasbordo.fecha,
+            },
+            {
+              fields: [
+                "id_data",
+                "id_embarque",
+                "puerto_transb",
+                "nave",
+                "fecha",
+              ],
+            }
+          );
+        });
+      }
+
+      if (medio_transporte == "LCL") {
+        const deleteFCL = await datafcl.destroy({
+          where: { id_data: getDataEmbarque.id },
+        });
+
+        const deleteLCL = await datalcl.destroy({
+          where: { id_data: getDataEmbarque.id },
+        });
+
+        const creaaaar = await datalcl.create(
+          {
+            id_data: getDataEmbarque.id,
+            contenedor,
+            cant_bultos,
+            peso,
+            volumen,
+            lugar_destino,
+          },
+          {
+            fields: [
+              "id_data",
+              "contenedor",
+              "cant_bultos",
+              "peso",
+              "volumen",
+              "lugar_destino",
+            ],
+          },
+          {
+            attributes: ["id"],
+          }
+        );
+      }
+      if (medio_transporte == "FCL") {
+        const deleteFCL = await datafcl.destroy({
+          where: { id_data: getDataEmbarque.id },
+        });
+
+        const deleteLCL = await datalcl.destroy({
+          where: { id_data: getDataEmbarque.id },
+        });
+
+        //creo el fcl
+        const updateFCL = await datafcl.create(
+          {
+            id_data: getDataEmbarque.id,
+            deposito_contenedores,
+            cont_tipo,
+            sello,
+          },
+          {
+            fields: ["id_data", "deposito_contenedores", "cont_tipo", "sello"],
+          }
+        );
+      }
+
+      const payload = {
+        id: getEmbarque.id,
+        tipo_operacion: getEmbarque.tipo_operacion,
+        n_operacion: getEmbarque.n_operacion,
+        medio_transporte: getEmbarque.medio_transporte,
+        referencia: getEmbarque.referencia,
+        etd: getEmbarque.etd,
+        eta: getEmbarque.eta,
+        estado: getEmbarque.estado,
+
+        //dataEmbarque
+        incoterm: getDataEmbarque.intercom,
+        exportador: getDataEmbarque.exportador,
+        importador: getDataEmbarque.importador,
+        embarcador: getDataEmbarque.embarcador, //operador logistico
+        agencia_aduana: getDataEmbarque.agencia_aduana,
+        motonave: getDataEmbarque.motonave,
+        puertoembarque: getDataEmbarque.puertoembarque,
+        puertodestino: getDataEmbarque.puertodestino,
+        lugardestino: getDataEmbarque.lugardestino,
+        naviera: getDataEmbarque.naviera,
+        viaje: getDataEmbarque.viaje,
+        valor_cif: getDataEmbarque.valor_cif,
+
+        tipo_documento: getDataEmbarque.tipo_documento,
+        documento: getDataEmbarque.documento,
+        reserva: getDataEmbarque.reserva,
+
+        // //arreglo de trasbordos
+        trasbordos: trasbordos,
+        // //arreglo de mercancias
+        mercancias: mercancias,
+      };
+
+      res.json({
+        message: "Embarque actualizado correctamente",
+        payload,
+      });
     } else {
       res.json({
         respuesta: false,
         message: "no se pudo encontrar dicho embarque",
       });
     }
-
-    res.json({
-      message: "Embarque actualizado correctamente",
-      EmbarquesUpdate,
-      dataEmbarqueUpdate,
-      valorDataUpdate,
-    });
   } catch (error) {
-    console.log(error);
+    res.status(350).json(error);
   }
 }
-
-// export async function setEstado(req, res) {
-//   const { id } = req.params;
-//   const { estado } = req.body;
-//   try {
-//     //primero busco el embarque con el id
-//     const getEmbarque = await embarques.findOne(
-//       {
-//         where: {
-//           id,
-//         },
-//       },
-//       {
-//         attributes: ["id", "estado"],
-//       }
-//     );
-
-//     //si existe el id cambio el estado y completo la actividad anterior
-//     if (getEmbarque) {
-//       //cambio el estado del embarque
-//       const setState = await embarques.update(
-//         {
-//           estado,
-//         },
-//         {
-//           where: { id },
-//         }
-//       );
-
-//       //dependiendo del estado al que cambio es el comentario que creo
-
-//       //si el estado actual es origen y pasa a Abordo
-//       if (getEmbarque.estado == "Origen " && estado == "Abordo") {
-//         //obtengo el id de la linea de tiempo para crear el comentario
-//         const getTimelineId = await timeline.findOne(
-//           {
-//             where: {
-//               id_embarque: id,
-//             },
-//           },
-//           {
-//             attributes: ["id"],
-//           }
-//         );
-
-//         //cambio el estado de la linea de tiempo anterior a finalizado
-//         const setTimelineState = await comtimeline.update(
-//           {
-//             estado: "Finalizado",
-//           },
-//           {
-//             where: {
-//               estado: "Origen",
-//             },
-//           }
-//         );
-//         //creo un comentario  linea de tiempo para Abordo
-//         const createComTimeline = await comtimeline.create(
-//           {
-//             id_linea_tiempo: getTimelineId.id,
-//             titulo: "Abordo",
-//             Contenido: "Viajando a destino",
-//             estado: "Activo",
-//             creado: sequelize.literal("CURRENT_TIMESTAMP"),
-//           },
-//           {
-//             fields: [
-//               "id_linea_tiempo",
-//               "titulo",
-//               "contenido",
-//               "estado",
-//               "creado",
-//             ],
-//           }
-//         );
-//         res.json({ Respuesta: "Estado cambiado a Abordo" });
-//       }
-
-//       //si el estado actual es Abordo y pasa a Llegado
-//       else if (getEmbarque.estado == "Abordo " && estado == "Llegado") {
-//         //obtengo el id de la linea de tiempo para crear el comentario
-//         const getTimelineId = await timeline.findOne(
-//           {
-//             where: {
-//               id_embarque: id,
-//             },
-//           },
-//           {
-//             attributes: ["id"],
-//           }
-//         );
-
-//         //cambio el estado de la linea de tiempo anterior a finalizado
-//         const setTimelineState = await comtimeline.update(
-//           {
-//             estado: "Finalizado",
-//           },
-//           {
-//             where: {
-//               estado: "Abordo",
-//             },
-//           }
-//         );
-//         //creo un comentario  linea de tiempo para Abordo
-//         const createComTimeline = await comtimeline.create(
-//           {
-//             id_linea_tiempo: getTimelineId.id,
-//             titulo: "Llegado",
-//             Contenido: "Llego a destino",
-//             estado: "Activo",
-//             creado: sequelize.literal("CURRENT_TIMESTAMP"),
-//           },
-//           {
-//             fields: [
-//               "id_linea_tiempo",
-//               "titulo",
-//               "contenido",
-//               "estado",
-//               "creado",
-//             ],
-//           }
-//         );
-//         res.json({ Respuesta: "Estado cambiado a Llegado" });
-//       }
-
-//       //si el estado actual es Llegado y pasa a Origen
-//       else if (getEmbarque.estado == "Llegado " && estado == "Finalizado") {
-//         //obtengo el id de la linea de tiempo para crear el comentario
-//         const getTimelineId = await timeline.findOne(
-//           {
-//             where: {
-//               id_embarque: id,
-//             },
-//           },
-//           {
-//             attributes: ["id"],
-//           }
-//         );
-
-//         //cambio el estado de la linea de tiempo anterior a finalizado
-//         const setTimelineState = await comtimeline.update(
-//           {
-//             estado: "Finalizado",
-//           },
-//           {
-//             where: {
-//               estado: "Llegado",
-//             },
-//           }
-//         );
-//         //creo un comentario  linea de tiempo para Abordo
-//         const createComTimeline = await comtimeline.create(
-//           {
-//             id_linea_tiempo: getTimelineId.id,
-//             titulo: "Finalizado",
-//             Contenido: "Emabarque finalizado!",
-//             estado: "Finalizado",
-//             creado: sequelize.literal("CURRENT_TIMESTAMP"),
-//           },
-//           {
-//             fields: [
-//               "id_linea_tiempo",
-//               "titulo",
-//               "contenido",
-//               "estado",
-//               "creado",
-//             ],
-//           }
-//         );
-//         res.json({ Respuesta: "Embarque Finalizado" });
-//       }
-
-//       //se deberian crear casos para retroceder? si elimino una tarjeta paso al estado anterior?
-//     } else {
-//       res.json({
-//         respuesta: false,
-//         message: "no se ha encontrado el embarque",
-//       });
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
 
 export async function getEstado(req, res) {
   const allActivos = await embarques.findAll({

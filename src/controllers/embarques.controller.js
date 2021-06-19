@@ -415,7 +415,7 @@ export async function getallEmbarques(req, res) {
 }
 
 export async function deleteEmbarque(req, res) {
-  const { id } = req.params;
+  const { id } = req.body;
   //al eliminar un embarque elimino los comentarios asociados
   try {
     //eliminar los comentarios y archivos de un embarque

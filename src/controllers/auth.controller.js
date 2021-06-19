@@ -3,18 +3,19 @@ import usuarios from "../models/users";
 import datausuario from "../models/datausuario";
 import roles from "../models/roles";
 import permisos from "../models/permisos";
-// import bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import config from "../config";
 import jwt from "jsonwebtoken";
+import md5 from "md5";
 
-// export const comparePassword = async (password, receivePassword) => {
-//   return await bcrypt.compare(password, receivePassword);
-// };
+export const comparePassword = async (password, receivePassword) => {
+  return await bcrypt.compare(password, receivePassword);
+};
 
-// export const encryptPassword = async (password) => {
-//   const salt = await bcrypt.genSalt(10);
-//   return await bcrypt.hash(password, salt);
-// };
+export const encryptPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+};
 
 export const consulRol = async (id) => {
   const codRol = await roles.findOne({
@@ -73,9 +74,9 @@ export const signUp = async (req, res) => {
 };
 
 export const signIn = async (req, res) => {
-  const { email, pass } = req.body;
-  console.log(email, pass);
-  const mail = email;
+  const { mail, pass } = req.body;
+  console.log(mail, pass);
+  // const mail = email;
   let bool = false;
   const user = await datausuario.findOne({
     where: { mail },
@@ -94,9 +95,14 @@ export const signIn = async (req, res) => {
     ],
   });
   if (user) {
-    //const matchPassword = await comparePassword(password, user.password);
+    const comparePassword = async (password, receivePassword) => {
+      return await bcrypt.compare(password, receivePassword);
+    };
+    const pas = await encryptPassword(pass);
+    const matchPassword = await comparePassword(pass, user.pass);
     let user_token = null;
-    // if (matchPassword) {
+
+    //if (matchPassword) {
     if (user.pass === pass) {
       user_token = jwt.sign({ id: user.id_usuario }, config.SECRET, {
         expiresIn: "12h",
@@ -107,7 +113,8 @@ export const signIn = async (req, res) => {
         id: user.id_usuario,
         nombre: user.nombre,
         apellido: user.apellido,
-        rut: user.rut + user.dv,
+        rut: user.rut,
+        dv: user.dv,
         mail: user.mail,
         telefono: user.telefono,
         asesor: user.asesor,

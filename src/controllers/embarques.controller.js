@@ -25,7 +25,7 @@ export async function createEmbarque(req, res) {
       eta,
 
       //dataEmbarque
-      incoterm,
+      intercom,
       exportador,
       importador,
       embarcador, //operador logistico
@@ -87,7 +87,7 @@ export async function createEmbarque(req, res) {
       const newDataEmbarque = await dataembarque.create(
         {
           id_embarque: newEmbarque.id,
-          intercom: incoterm,
+          intercom: intercom,
           exportador,
           importador,
           embarcador,
@@ -277,7 +277,7 @@ export async function createEmbarque(req, res) {
         eta: newEmbarque.eta,
 
         //dataEmbarque
-        incoterm: newDataEmbarque.intercom,
+        intercom: newDataEmbarque.intercom,
         exportador: newDataEmbarque.exportador,
         importador: newDataEmbarque.importador,
         embarcador: newDataEmbarque.embarcador, //operador logistico
@@ -346,13 +346,13 @@ export async function getEmbarque(req, res) {
           id_data: datoEmbarque.id,
         },
       });
-      if (embarque.medio_transporte === "LCL") {
+      if (embarque.medio_transporte == "LCL") {
         data_transporte = await datalcl.findOne({
           where: {
             id_data: datoEmbarque.id,
           },
         });
-      } else if (embarque.medio_transporte === "FCL") {
+      } else if (embarque.medio_transporte == "FCL") {
         data_transporte = await datafcl.findOne({
           where: {
             id_data: datoEmbarque.id,
@@ -385,8 +385,10 @@ export async function getEmbarque(req, res) {
         naviera: datoEmbarque.naviera,
         transbordo: datoEmbarque.transbordo,
         reserva: datoEmbarque.reserva,
-        fecha_inicio: datoEmbarque.fecha_inicio,
-        fecha_fin: datoEmbarque.fecha_fin,
+
+        sello: data_transporte.sello,
+        cont_tipo: data_transporte.cont_tipo,
+        deposito_contenedores: data_transporte.deposito_contenedores,
 
         data_transporte,
 
@@ -530,7 +532,6 @@ export async function deleteEmbarque(req, res) {
 export async function updateEmbarques(req, res) {
   try {
     const {
-      id,
       tipo_operacion,
       n_operacion,
       medio_transporte,
@@ -540,7 +541,7 @@ export async function updateEmbarques(req, res) {
       estado,
 
       //dataEmbarque
-      incoterm,
+      intercom,
       exportador,
       importador,
       embarcador, //operador logistico
@@ -574,6 +575,7 @@ export async function updateEmbarques(req, res) {
       cont_tipo,
       sello,
     } = req.body;
+    const { id } = req.params;
 
     const getEmbarque = await embarques.findOne(
       {
@@ -767,7 +769,7 @@ export async function updateEmbarques(req, res) {
 
       const dataembarqueupdate = await dataembarque.update(
         {
-          intercom: incoterm,
+          intercom: intercom,
           exportador,
           importador,
           embarcador,
@@ -815,14 +817,12 @@ export async function updateEmbarques(req, res) {
                 "flete_usd",
                 "seguro_usd",
               ],
-            },
-            console.log("creaoMerca")
+            }
           );
         });
       }
 
       if (trasbordos) {
-        console.log("no se que hago aca");
         //se eliminan las mercancias actuales
         const deleteTrasbordos = await transbordo.destroy({
           where: {
@@ -919,7 +919,7 @@ export async function updateEmbarques(req, res) {
         estado: getEmbarque.estado,
 
         //dataEmbarque
-        incoterm: getDataEmbarque.intercom,
+        intercom: getDataEmbarque.intercom,
         exportador: getDataEmbarque.exportador,
         importador: getDataEmbarque.importador,
         embarcador: getDataEmbarque.embarcador, //operador logistico
@@ -960,22 +960,22 @@ export async function updateEmbarques(req, res) {
 export async function getEstado(req, res) {
   const allActivos = await embarques.findAll({
     where: {
-      estado: "Origen",
+      estado: "origen",
     },
   });
   const allAbordos = await embarques.findAll({
     where: {
-      estado: "Abordo",
+      estado: "abordo",
     },
   });
   const allLlegadas = await embarques.findAll({
     where: {
-      estado: "Llegado",
+      estado: "llegada",
     },
   });
   const allFinalizados = await embarques.findAll({
     where: {
-      estado: "Finalizado",
+      estado: "finalizado",
     },
   });
   var FinalizadosId = [];

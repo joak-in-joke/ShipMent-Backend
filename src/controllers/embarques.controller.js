@@ -978,15 +978,29 @@ export async function getEstado(req, res) {
       estado: "Finalizado",
     },
   });
+  var FinalizadosId = [];
+  allFinalizados.forEach(({ id }) => FinalizadosId.push(id));
+  const allFin = await dataembarque.findAll({
+    where: {
+      id_embarque: FinalizadosId,
+    },
+  });
+
+  const monthCount = new Array(12).fill(0);
+  allFin.forEach(
+    ({ fecha_inicio }) => (monthCount[new Date(fecha_inicio).getMonth()] += 1)
+  );
+
   const Estado = {
     Activos: allActivos.length,
     Abordos: allAbordos.length,
     Llegadas: allLlegadas.length,
     Finalizados: allFinalizados.length,
+    anualGraph: monthCount,
   };
+
   res.json({ resultado: true, data: Estado });
 }
-
 export async function getActivos(req, res) {
   const allActivos = await embarques.findAll({
     attributes: [

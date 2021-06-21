@@ -9,7 +9,7 @@ export async function filterEmbarque(req, res) {
       case "id":
         query = {
           where: {
-            [Sequelize.Op.substring]: busqueda,
+            id: busqueda,
           },
         };
         break;
@@ -17,7 +17,7 @@ export async function filterEmbarque(req, res) {
       case "status":
         query = {
           where: {
-            [Sequelize.Op.substring]: busqueda,
+            estado: busqueda,
           },
         };
         break;

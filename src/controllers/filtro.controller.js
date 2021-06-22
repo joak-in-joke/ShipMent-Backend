@@ -25,7 +25,9 @@ export async function filterEmbarque(req, res) {
       case "referencia":
         query = {
           where: {
-            referencia: busqueda,
+            referencia: {
+              [Sequelize.Op.substring]: busqueda.toUpperCase(),
+            },
           },
         };
         break;

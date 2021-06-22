@@ -17,7 +17,10 @@ import {
   deleteTrasbordo,
 } from "../controllers/trasbordo.controller";
 
-import { filterEmbarque } from "../controllers/filtro.controller";
+import {
+  filterEmbarque,
+  embarqueAnnual,
+} from "../controllers/filtro.controller";
 
 //admin/dashboard
 router.get("/active", getActivos);

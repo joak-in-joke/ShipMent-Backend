@@ -305,10 +305,6 @@ export async function updateUser(req, res) {
   });
 }
 
-const comparePassword = async (password, receivePassword) => {
-  return await bcrypt.compare(password, receivePassword);
-};
-
 export async function updatePassword(req, res) {
   const { id, password, newPassword } = req.body;
 
@@ -320,20 +316,23 @@ export async function updatePassword(req, res) {
   });
   //si encuentra comparo las pass
   if (getuser) {
+    const comparePassword = async (password, receivePassword) => {
+      return await bcrypt.compare(password, receivePassword);
+    };
     //busco el datauser
     const getdatauser = await datauser.findOne({
       where: {
         id_usuario: getuser.id,
       },
     });
-    //const matchPassword = await comparePassword(pass, user.pass);
+    const matchPassword = await comparePassword(password, getdatauser.pass);
     //si las pass coinciden chiao
-    //if (matchPassword) {
-    if (getdatauser.pass === password) {
+    if (matchPassword) {
+      //if (getdatauser.pass === password) {
       //getdatauser.pass = encryptPassword(newpass)
       const updatePassword = await datauser.update(
         {
-          pass: newPassword,
+          pass: await encryptPassword(newPassword),
         },
         {
           where: {

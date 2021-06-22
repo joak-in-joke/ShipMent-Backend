@@ -10,7 +10,6 @@ export async function createProvider(req, res) {
     pais,
     rut,
     direccion,
-
     email,
     telefono,
 
@@ -48,7 +47,7 @@ export async function createProvider(req, res) {
         telefono: fono,
       },
       {
-        fields: ["id_proveedor", "nombre_proveedor", "cargo", "email", "fono"],
+        fields: ["id_proveedor", "nombre", "cargo", "email", "telefono"],
       }
     );
     const newCuentaBanco = await cuenta.create(

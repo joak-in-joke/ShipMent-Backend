@@ -124,10 +124,10 @@ export const signIn = async (req, res) => {
       bool = true;
       res.json({ Resultado: bool, usuario: result, token: user_token });
     } else {
-      res.json({ resultado: bool, message: "Credenciales incorrectas" });
+      res.json({ resultado: bool, message: "Credenciales incorrectas primer if" });
     }
   } else {
-    res.json({ resultado: bool, message: "Credenciales incorrectas" });
+    res.json({ resultado: bool, message: "Credenciales incorrectas segundo if" });
   }
 };
 

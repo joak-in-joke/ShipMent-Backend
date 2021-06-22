@@ -705,7 +705,7 @@ export async function updateEmbarques(req, res) {
         },
       },
       {
-        attributes: ["id", "estado"],
+        attributes: ["id"],
       }
     );
 
@@ -776,7 +776,6 @@ export async function updateEmbarques(req, res) {
             ],
           }
         );
-        res.json({ Respuesta: "Estado cambiado a Abordo" });
       }
 
       //si el estado actual es Abordo y pasa a Llegado

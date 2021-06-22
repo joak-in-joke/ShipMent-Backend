@@ -131,8 +131,8 @@ export async function createEmbarque(req, res) {
 
       if (mercancias) {
         //itera segun cuantos datos se importen de mercancias
-        mercancias.map((mercancia) => {
-          const newValorData = valordata.create(
+        mercancias.map(async (mercancia) => {
+          const newValorData = await valordata.create(
             {
               id_data: newDataEmbarque.id,
               nombre_mercancia: mercancia.nombre_mercancia,
@@ -155,8 +155,8 @@ export async function createEmbarque(req, res) {
 
       if (trasbordos) {
         //itera segun cuantos trasbordos se maneden
-        trasbordos.map((trasbordo) => {
-          const newTrasbordo = transbordo.create(
+        trasbordos.map(async (trasbordo) => {
+          const newTrasbordo = await transbordo.create(
             {
               id_data: newDataEmbarque.id,
               puerto_transb: trasbordo.puerto_transb,
@@ -420,110 +420,116 @@ export async function deleteEmbarque(req, res) {
     //eliminar los comentarios y archivos de un embarque
 
     //necesito el data embarque id para poder eliminar el valordata
-    const getvalorDataId = await dataembarque.findOne({
-      where: {
-        id_embarque: id,
-      },
-      attributes: ["id"],
-    });
-    if (getvalorDataId) {
-      const deleteValorData = await valordata.destroy({
-        where: {
-          id_data: getvalorDataId.id,
-        },
-      });
-    }
-    const getTimelines = await timelines.findOne({
-      where: {
-        id_embarque: id,
-      },
-      attributes: ["id"],
-    });
-    if (getTimelines) {
-      const deleteComentaries = await comentarios.destroy({
-        where: {
-          id_linea_tiempo: getTimelines.id,
-        },
-      });
-      const deleteTimelines = await timelines.destroy({
-        where: {
-          id_embarque: id,
-        },
-      });
-    }
-
-    const getdataembarque = await dataembarque.findOne({
-      where: {
-        id_embarque: id,
-      },
-      attributes: ["id"],
-    });
-    if (getdataembarque) {
-      //borrar datalcl
-      const deletelcl = await datalcl.destroy({
-        where: { id_data: getdataembarque.id },
-      });
-      //borrarfcl
-      const deletefcl = await datafcl.destroy({
-        where: { id_data: getdataembarque.id },
-      });
-      //borrartransbordos
-      const deletetransbordos = await transbordo.destroy({
-        where: { id_data: getdataembarque.id },
-      });
-      const getdocuments = await documentos.findOne({
-        where: { id_embarque: id },
-        attributes: ["id"],
-      });
-      if (getdocuments) {
-        const deleteDocumento = await documento.destroy({
+    if (id) {
+      id.map(async (idEmbarque) => {
+        const getvalorDataId = await dataembarque.findOne({
           where: {
-            id_documentos: getdocuments.id,
+            id_embarque: idEmbarque,
+          },
+          attributes: ["id"],
+        });
+        if (getvalorDataId) {
+          const deleteValorData = await valordata.destroy({
+            where: {
+              id_data: getvalorDataId.id,
+            },
+          });
+        }
+        const getTimelines = await timelines.findOne({
+          where: {
+            id_embarque: idEmbarque,
+          },
+          attributes: ["id"],
+        });
+        if (getTimelines) {
+          const deleteComentaries = await comentarios.destroy({
+            where: {
+              id_linea_tiempo: getTimelines.id,
+            },
+          });
+          const deleteTimelines = await timelines.destroy({
+            where: {
+              id_embarque: idEmbarque,
+            },
+          });
+        }
+
+        const getdataembarque = await dataembarque.findOne({
+          where: {
+            id_embarque: idEmbarque,
+          },
+          attributes: ["id"],
+        });
+        if (getdataembarque) {
+          //borrar datalcl
+          const deletelcl = await datalcl.destroy({
+            where: { id_data: getdataembarque.id },
+          });
+          //borrarfcl
+          const deletefcl = await datafcl.destroy({
+            where: { id_data: getdataembarque.id },
+          });
+          //borrartransbordos
+          const deletetransbordos = await transbordo.destroy({
+            where: { id_data: getdataembarque.id },
+          });
+          const getdocuments = await documentos.findOne({
+            where: { id_embarque: idEmbarque },
+            attributes: ["id"],
+          });
+          if (getdocuments) {
+            const deleteDocumento = await documento.destroy({
+              where: {
+                id_documentos: getdocuments.id,
+              },
+            });
+          }
+          const deleteDocumentos = await documentos.destroy({
+            where: {
+              id_embarque: idEmbarque,
+            },
+          });
+        }
+
+        const deleteDataEmbarque = await dataembarque.destroy({
+          where: {
+            id_embarque: idEmbarque,
           },
         });
-      }
-      const deleteDocumentos = await documentos.destroy({
-        where: {
-          id_embarque: id,
-        },
-      });
-    }
+        //borrar item_finanza y finanza
+        const getfinanza = await finanza.findOne({
+          where: {
+            id_embarque: idEmbarque,
+          },
+          attributes: ["id"],
+        });
+        if (getfinanza) {
+          const deleteItemFinanza = await itemfinanza.destroy({
+            where: {
+              id_finanza: getfinanza.id,
+            },
+          });
+        }
+        const deletefinanza = await finanza.destroy({
+          where: {
+            id_embarque: idEmbarque,
+          },
+        });
 
-    const deleteDataEmbarque = await dataembarque.destroy({
-      where: {
-        id_embarque: id,
-      },
-    });
-    //borrar item_finanza y finanza
-    const getfinanza = await finanza.findOne({
-      where: {
-        id_embarque: id,
-      },
-      attributes: ["id"],
-    });
-    if (getfinanza) {
-      const deleteItemFinanza = await itemfinanza.destroy({
-        where: {
-          id_finanza: getfinanza.id,
-        },
+        const deleteEmbarques = await embarques.destroy({
+          where: {
+            id,
+          },
+        });
       });
+      res.json({
+        message: "Embarque eliminadado correctamente",
+        deleteDataEmbarque,
+        deleteEmbarques,
+      });
+    } else {
+      res.json({ respuesta: false, mesagge: "error, los id ya no existen):" });
     }
-    const deletefinanza = await finanza.destroy({
-      where: {
-        id_embarque: id,
-      },
-    });
-
-    const deleteEmbarques = await embarques.destroy({
-      where: {
-        id,
-      },
-    });
-    res.json({
-      message: "Embarque eliminadado correctamente",
-      deleteDataEmbarque,
-      deleteEmbarques,
-    });
   } catch (error) {
     console.log(error);
   }
@@ -800,8 +806,8 @@ export async function updateEmbarques(req, res) {
         });
 
         //itera segun cuantos datos se importen de mercancias
-        mercancias.map((mercancia) => {
-          const valorDataUpdate = valordata.create(
+        mercancias.map(async (mercancia) => {
+          const valorDataUpdate = await valordata.create(
             {
               id_data: getDataEmbarque.id,
               nombre_mercancia: mercancia.nombre_mercancia,

@@ -5,6 +5,7 @@ import {
   createEmbarque,
   getEmbarque,
   deleteEmbarque,
+  deleteEmbarqueMasive,
   updateEmbarques,
   getActivos,
   getFinalizados,
@@ -35,6 +36,7 @@ router.post("/trasbordo/delete/", deleteTrasbordo);
 router.get("/:id", getEmbarque);
 router.get("/", getallEmbarques);
 
+router.post("/deleteMasive", deleteEmbarqueMasive);
 router.post("/create", createEmbarque);
 router.post("/update/:id", updateEmbarques);
 router.post("/delete", deleteEmbarque);

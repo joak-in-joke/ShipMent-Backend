@@ -420,6 +420,122 @@ export async function deleteEmbarque(req, res) {
     //eliminar los comentarios y archivos de un embarque
 
     //necesito el data embarque id para poder eliminar el valordata
+    const getvalorDataId = await dataembarque.findOne({
+      where: {
+        id_embarque: id,
+      },
+      attributes: ["id"],
+    });
+    if (getvalorDataId) {
+      const deleteValorData = await valordata.destroy({
+        where: {
+          id_data: getvalorDataId.id,
+        },
+      });
+    }
+    const getTimelines = await timelines.findOne({
+      where: {
+        id_embarque: id,
+      },
+      attributes: ["id"],
+    });
+    if (getTimelines) {
+      const deleteComentaries = await comentarios.destroy({
+        where: {
+          id_linea_tiempo: getTimelines.id,
+        },
+      });
+      const deleteTimelines = await timelines.destroy({
+        where: {
+          id_embarque: id,
+        },
+      });
+    }
+
+    const getdataembarque = await dataembarque.findOne({
+      where: {
+        id_embarque: id,
+      },
+      attributes: ["id"],
+    });
+    if (getdataembarque) {
+      //borrar datalcl
+      const deletelcl = await datalcl.destroy({
+        where: { id_data: getdataembarque.id },
+      });
+      //borrarfcl
+      const deletefcl = await datafcl.destroy({
+        where: { id_data: getdataembarque.id },
+      });
+      //borrartransbordos
+      const deletetransbordos = await transbordo.destroy({
+        where: { id_data: getdataembarque.id },
+      });
+      const getdocuments = await documentos.findOne({
+        where: { id_embarque: id },
+        attributes: ["id"],
+      });
+      if (getdocuments) {
+        const deleteDocumento = await documento.destroy({
+          where: {
+            id_documentos: getdocuments.id,
+          },
+        });
+      }
+      const deleteDocumentos = await documentos.destroy({
+        where: {
+          id_embarque: id,
+        },
+      });
+    }
+
+    const deleteDataEmbarque = await dataembarque.destroy({
+      where: {
+        id_embarque: id,
+      },
+    });
+    //borrar item_finanza y finanza
+    const getfinanza = await finanza.findOne({
+      where: {
+        id_embarque: id,
+      },
+      attributes: ["id"],
+    });
+    if (getfinanza) {
+      const deleteItemFinanza = await itemfinanza.destroy({
+        where: {
+          id_finanza: getfinanza.id,
+        },
+      });
+    }
+    const deletefinanza = await finanza.destroy({
+      where: {
+        id_embarque: id,
+      },
+    });
+
+    const deleteEmbarques = await embarques.destroy({
+      where: {
+        id,
+      },
+    });
+    res.json({
+      message: "Embarque eliminadado correctamente",
+      deleteDataEmbarque,
+      deleteEmbarques,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteEmbarqueMasive(req, res) {
+  const { id } = req.body;
+  //al eliminar un embarque elimino los comentarios asociados
+  try {
+    //eliminar los comentarios y archivos de un embarque
+
+    //necesito el data embarque id para poder eliminar el valordata
     if (id) {
       id.map(async (idEmbarque) => {
         const getvalorDataId = await dataembarque.findOne({
@@ -523,9 +639,8 @@ export async function deleteEmbarque(req, res) {
         });
       });
       res.json({
+        respuesta: true,
         message: "Embarque eliminadado correctamente",
-        deleteDataEmbarque,
-        deleteEmbarques,
       });
     } else {
       res.json({ respuesta: false, mesagge: "error, los id ya no existen):" });
@@ -618,7 +733,7 @@ export async function updateEmbarques(req, res) {
       //dependiendo del estado al que cambio es el comentario que creo
 
       //si el estado actual es origen y pasa a Abordo
-      if (estado == "Abordo") {
+      if (estado == "abordo") {
         //obtengo el id de la linea de tiempo para crear el comentario
         const getTimelineId = await timeline.findOne(
           {
@@ -634,7 +749,7 @@ export async function updateEmbarques(req, res) {
         //cambio el estado de la linea de tiempo anterior a finalizado
         const setTimelineState = await comentarios.update(
           {
-            estado: "Finalizado",
+            estado: "finalizado",
           },
           {
             where: {
@@ -648,7 +763,7 @@ export async function updateEmbarques(req, res) {
             id_linea_tiempo: getTimelineId.id,
             titulo: "Abordo",
             contenido: "Viajando a destino",
-            estado: "Activo",
+            estado: "activo",
             creado: sequelize.literal("CURRENT_TIMESTAMP"),
           },
           {
@@ -665,7 +780,7 @@ export async function updateEmbarques(req, res) {
       }
 
       //si el estado actual es Abordo y pasa a Llegado
-      else if (estado == "Llegado") {
+      else if (estado == "llegada") {
         //obtengo el id de la linea de tiempo para crear el comentario
         const getTimelineId = await timeline.findOne(
           {
@@ -681,11 +796,11 @@ export async function updateEmbarques(req, res) {
         //cambio el estado de la linea de tiempo anterior a finalizado
         const setTimelineState = await comentarios.update(
           {
-            estado: "Finalizado",
+            estado: "finalizado",
           },
           {
             where: {
-              estado: "Abordo",
+              estado: "abordo",
             },
           }
         );
@@ -695,7 +810,7 @@ export async function updateEmbarques(req, res) {
             id_linea_tiempo: getTimelineId.id,
             titulo: "Llegado",
             contenido: "Llego a destino",
-            estado: "Activo",
+            estado: "activo",
             creado: sequelize.literal("CURRENT_TIMESTAMP"),
           },
           {
@@ -712,7 +827,7 @@ export async function updateEmbarques(req, res) {
       }
 
       //si el estado actual es Llegado y pasa a Origen
-      else if (estado == "Finalizado") {
+      else if (estado == "finalizado") {
         //obtengo el id de la linea de tiempo para crear el comentario
         const getTimelineId = await timeline.findOne(
           {
@@ -728,22 +843,22 @@ export async function updateEmbarques(req, res) {
         //cambio el estado de la linea de tiempo anterior a finalizado
         const setTimelineState = await comentarios.update(
           {
-            estado: "Finalizado",
+            estado: "finalizado",
           },
           {
             where: {
-              estado: "Llegado",
+              estado: "llegado",
             },
           }
         );
         //cambio el estado de el embarque
         const setEmbarqueState = await embarque.update(
           {
-            estado: "Finalizado",
+            estado: "finalizado",
           },
           {
             where: {
-              estado: "Llegado",
+              estado: "llegado",
             },
           }
         );
@@ -757,7 +872,7 @@ export async function updateEmbarques(req, res) {
             id_linea_tiempo: getTimelineId.id,
             titulo: "Finalizado",
             contenido: "Emabarque finalizado!",
-            estado: "Finalizado",
+            estado: "finalizado",
             creado: sequelize.literal("CURRENT_TIMESTAMP"),
           },
           {
@@ -966,22 +1081,22 @@ export async function updateEmbarques(req, res) {
 export async function getEstado(req, res) {
   const allActivos = await embarques.findAll({
     where: {
-      estado: "Origen",
+      estado: "origen",
     },
   });
   const allAbordos = await embarques.findAll({
     where: {
-      estado: "Abordo",
+      estado: "abordo",
     },
   });
   const allLlegadas = await embarques.findAll({
     where: {
-      estado: "Llegada",
+      estado: "llegada",
     },
   });
   const allFinalizados = await embarques.findAll({
     where: {
-      estado: "Finalizado",
+      estado: "finalizado",
     },
   });
   var FinalizadosId = [];
@@ -1023,7 +1138,7 @@ export async function getEstado(req, res) {
   allOrigen.forEach(({ fecha_inicio }) => {
     var today = new Date();
     if (today.getMonth() == new Date(fecha_inicio).getMonth()) {
-      dayCount[new Date(fecha_inicio).getDay()] += 1;
+      dayCount[new Date(fecha_inicio).getDate()] += 1;
     }
   });
 
@@ -1039,6 +1154,7 @@ export async function getEstado(req, res) {
 
   res.json({ resultado: true, data: Estado });
 }
+
 export async function getActivos(req, res) {
   const allActivos = await embarques.findAll({
     attributes: [

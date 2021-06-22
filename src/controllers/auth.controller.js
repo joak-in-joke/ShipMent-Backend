@@ -75,7 +75,6 @@ export const signUp = async (req, res) => {
 
 export const signIn = async (req, res) => {
   const { mail, pass } = req.body;
-  console.log(mail, pass);
   // const mail = email;
   let bool = false;
   const user = await datausuario.findOne({

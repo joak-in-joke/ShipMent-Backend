@@ -3,6 +3,7 @@ import dataembarque from "../models/dataembarque";
 var Sequelize = require("sequelize");
 export async function filterEmbarque(req, res) {
   const { filtro, busqueda } = req.body;
+  console.log(filtro, busqueda);
   if (busqueda && filtro) {
     var query;
     switch (filtro) {
@@ -35,14 +36,14 @@ export async function filterEmbarque(req, res) {
       case "etd":
         query = {
           where: {
-            etd: busqueda,
+            etd: busqueda.toString(),
           },
         };
 
       case "eta":
         query = {
           where: {
-            eta: busqueda,
+            eta: busqueda.toString(),
           },
         };
         break;

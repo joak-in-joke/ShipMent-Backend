@@ -960,36 +960,66 @@ export async function updateEmbarques(req, res) {
 export async function getEstado(req, res) {
   const allActivos = await embarques.findAll({
     where: {
-      estado: "origen",
+      estado: "Origen",
     },
   });
   const allAbordos = await embarques.findAll({
     where: {
-      estado: "abordo",
+      estado: "Abordo",
     },
   });
   const allLlegadas = await embarques.findAll({
     where: {
-      estado: "llegada",
+      estado: "Llegada",
     },
   });
   const allFinalizados = await embarques.findAll({
     where: {
-      estado: "finalizado",
+      estado: "Finalizado",
     },
   });
   var FinalizadosId = [];
+  var OrigenId = [];
   allFinalizados.forEach(({ id }) => FinalizadosId.push(id));
+  allActivos.forEach(({ id }) => OrigenId.push(id));
   const allFin = await dataembarque.findAll({
     where: {
       id_embarque: FinalizadosId,
     },
   });
 
+  const allOrigen = await dataembarque.findAll({
+    where: {
+      id_embarque: OrigenId,
+    },
+  });
+
+  var ValorId = [];
+  allFin.forEach(({ id }) => ValorId.push(id));
+
+  const allValue = await valordata.findAll({
+    where: {
+      id_data: ValorId,
+    },
+  });
+
   const monthCount = new Array(12).fill(0);
+  const typeValue = new Array(3).fill(0);
+  const dayCount = new Array(31).fill(0);
   allFin.forEach(
     ({ fecha_inicio }) => (monthCount[new Date(fecha_inicio).getMonth()] += 1)
   );
+  allValue.forEach((Value) => {
+    typeValue[0] += Value.valor_usd;
+    typeValue[1] += Value.flete_usd;
+    typeValue[2] += Value.seguro_usd;
+  });
+  allOrigen.forEach(({ fecha_inicio }) => {
+    var today = new Date();
+    if (today.getMonth() == new Date(fecha_inicio).getMonth()) {
+      dayCount[new Date(fecha_inicio).getDay()] += 1;
+    }
+  });
 
   const Estado = {
     Activos: allActivos.length,
@@ -997,6 +1027,8 @@ export async function getEstado(req, res) {
     Llegadas: allLlegadas.length,
     Finalizados: allFinalizados.length,
     anualGraph: monthCount,
+    monthGraph: dayCount,
+    valueGraph: typeValue,
   };
 
   res.json({ resultado: true, data: Estado });

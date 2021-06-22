@@ -102,8 +102,8 @@ export const signIn = async (req, res) => {
     const matchPassword = await comparePassword(pass, user.pass);
     let user_token = null;
 
-    // if (matchPassword) {
-    if (user.pass === pass) {
+    if (matchPassword) {
+    // if (user.pass === pass) {
       user_token = jwt.sign({ id: user.id_usuario }, config.SECRET, {
         expiresIn: "12h",
       });

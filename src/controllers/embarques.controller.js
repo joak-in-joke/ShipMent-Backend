@@ -822,7 +822,6 @@ export async function updateEmbarques(req, res) {
             ],
           }
         );
-        res.json({ Respuesta: "Estado cambiado a Llegado" });
       }
 
       //si el estado actual es Llegado y pasa a Origen
@@ -884,7 +883,6 @@ export async function updateEmbarques(req, res) {
             ],
           }
         );
-        res.json({ Respuesta: "Embarque Finalizado" });
       }
 
       const dataembarqueupdate = await dataembarque.update(

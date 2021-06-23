@@ -129,12 +129,12 @@ export async function getUser(req, res) {
       where: {
         id,
       },
-      attributes: ["id", "tipo"],
+      attributes: ["id"],
     });
     if (finduser) {
       const finddatauser = await datauser.findOne({
         where: {
-          id_usuario: finduser.id,
+          id_usuario: id,
         },
         attributes: [
           "id",
@@ -143,14 +143,12 @@ export async function getUser(req, res) {
           "rut",
           "dv",
           "mail",
-          "estado",
           "cargo",
           "asesor",
           "telefono",
           "pass",
         ],
       });
-
       const permUser = await permisos.findOne({
         where: {
           id_usuario: finduser.id,
@@ -187,7 +185,7 @@ export async function getUser(req, res) {
       });
     }
   } catch (error) {
-    console.log({
+    res.json({
       respuesta: false,
       message:
         "No se pudo obtener el usuario, intente denuevo, si el problema persiste contacte con soporte",

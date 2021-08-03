@@ -1,7 +1,6 @@
 {
   "name": "shipmint",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js --exec babel-node",
@@ -23,7 +22,7 @@
     "morgan": "^1.10.0",
     "pg": "^8.6.0",
     "pg-hstore": "^2.3.3",
-    "sequelize": "^6.6.2"
+    "sequelize": "^6.6.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
@@ -31,5 +30,14 @@
     "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.14.2",
     "nodemon": "^2.0.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joak-in-joke/Shipment-Backend.git"
+  },
+  "bugs": {
+    "url": "https://github.com/joak-in-joke/Shipment-Backend/issues"
+  },
+  "homepage": "https://github.com/joak-in-joke/Shipment-Backend#readme",
+  "description": ""
 }

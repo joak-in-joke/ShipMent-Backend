@@ -1,73 +1,78 @@
-import sequelize from "sequelize";
-import { database } from "../database/database";
-
-const dataembarque = database.define(
-  "dataembarque",
-  {
-    id: {
-      type: sequelize.INTEGER,
-      primaryKey: true,
-    },
-    id_embarque: {
-      type: sequelize.INTEGER,
-    },
-
-    intercom: {
-      type: sequelize.TEXT,
-    },
-    exportador: {
-      type: sequelize.TEXT,
-    },
-    importador: {
-      type: sequelize.TEXT,
-    },
-    embarcador: {
-      type: sequelize.TEXT,
-    },
-    agencia_aduana: {
-      type: sequelize.TEXT,
-    },
-    tipo_documento: {
-      type: sequelize.TEXT,
-    },
-    documento: {
-      type: sequelize.TEXT,
-    },
-    puertoembarque: {
-      type: sequelize.TEXT,
-    },
-    puertodestino: {
-      type: sequelize.TEXT,
-    },
-    lugardestino: {
-      type: sequelize.TEXT,
-    },
-    motonave: {
-      type: sequelize.TEXT,
-    },
-    viaje: {
-      type: sequelize.TEXT,
-    },
-    naviera: {
-      type: sequelize.TEXT,
-    },
-    reserva: {
-      type: sequelize.TEXT,
-    },
-    valor_cif: {
-      type: sequelize.INTEGER,
-    },
-    fecha_inicio: {
-      type: sequelize.DATE,
-    },
-    fecha_fin: {
-      type: sequelize.DATE,
-    },
-  },
-  {
-    timestamps: false,
-    tableName: "dataembarque",
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class DataEmbarque extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      DataEmbarque.belongsTo(models.Embarque, {
+        foreignKey: "id_embarque",
+        onDelete: "CASCADE",
+      });
+      DataEmbarque.hasOne(models.LineaDeTiempo, {
+        foreignKey: "id_embarque",
+      });
+      DataEmbarque.hasOne(models.Finanza, {
+        foreignKey: "id_embarque",
+      });
+      DataEmbarque.hasMany(models.ValorData, {
+        foreignKey: "id_embarque",
+      });
+      DataEmbarque.hasMany(models.transbordoData, {
+        foreignKey: "id_data",
+      });
+      DataEmbarque.belongsTo(models.Puerto, {
+        foreignKey: "id_puerto_embarque",
+      });
+      DataEmbarque.hasOne(models.DataLCL, {
+        foreignKey: "id_data",
+      });
+      DataEmbarque.hasOne(models.DataFCL, {
+        foreignKey: "id_data",
+      });
+      DataEmbarque.belongsTo(models.OperadorLogistico, {
+        foreignKey: "id_operador",
+      });
+      DataEmbarque.belongsTo(models.OperadorLogistico, {
+        foreignKey: "id_agencia",
+      });
+      DataEmbarque.hasOne(models.Documentos, {
+        foreignKey: "id_embarque",
+      });
+      DataEmbarque.belongsTo(models.ProveedorCliente, {
+        foreignKey: "id_exportador",
+      });
+      DataEmbarque.belongsTo(models.ProveedorCliente, {
+        foreignKey: "id_importador",
+      });
+    }
   }
-);
-
-export default dataembarque;
+  DataEmbarque.init(
+    {
+      id_embarque: DataTypes.INTEGER,
+      id_puerto_embarque: DataTypes.INTEGER,
+      id_exportador: DataTypes.INTEGER,
+      id_importador: DataTypes.INTEGER,
+      id_operador: DataTypes.INTEGER,
+      id_agencia: DataTypes.INTEGER,
+      tipo_operacion: DataTypes.STRING,
+      incoterm: DataTypes.STRING,
+      tipo_documento: DataTypes.STRING,
+      documento: DataTypes.STRING,
+      motonave: DataTypes.STRING,
+      viaje: DataTypes.STRING,
+      naviera: DataTypes.STRING,
+      transbordo: DataTypes.BOOLEAN,
+      reserva: DataTypes.STRING,
+      valor_cif: DataTypes.NUMERIC,
+    },
+    {
+      sequelize,
+      modelName: "DataEmbarque",
+    }
+  );
+  return DataEmbarque;
+};

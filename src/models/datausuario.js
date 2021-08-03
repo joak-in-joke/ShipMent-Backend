@@ -1,48 +1,36 @@
-import sequelize from "sequelize";
-import { database } from "../database/database";
-
-const datausuario = database.define(
-  "datausuario",
-  {
-    id: {
-      type: sequelize.INTEGER,
-      primaryKey: true,
-    },
-    id_usuario: {
-      type: sequelize.INTEGER,
-    },
-    nombre: {
-      type: sequelize.TEXT,
-    },
-    apellido: {
-      type: sequelize.TEXT,
-    },
-    rut: {
-      type: sequelize.INTEGER,
-    },
-    dv: {
-      type: sequelize.TEXT,
-    },
-    mail: {
-      type: sequelize.TEXT,
-    },
-    cargo: {
-      type: sequelize.TEXT,
-    },
-    asesor: {
-      type: sequelize.TEXT,
-    },
-    telefono: {
-      type: sequelize.TEXT,
-    },
-    pass: {
-      type: sequelize.TEXT,
-    },
-  },
-  {
-    timestamps: false,
-    tableName: "datausuario",
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class DataUsuario extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      DataUsuario.belongsTo(models.Usuario, {
+        foreignKey: "id_usuario",
+        onDelete: "CASCADE",
+      });
+    }
   }
-);
-
-export default datausuario;
+  DataUsuario.init(
+    {
+      id_usuario: DataTypes.INTEGER,
+      nombre: DataTypes.STRING,
+      apellido: DataTypes.STRING,
+      rut: DataTypes.STRING,
+      email: DataTypes.STRING,
+      estado: DataTypes.STRING,
+      cargo: DataTypes.STRING,
+      ciudad: DataTypes.STRING,
+      telefono: DataTypes.STRING,
+      pass: DataTypes.STRING,
+    },
+    {
+      sequelize,
+      modelName: "DataUsuario",
+    }
+  );
+  return DataUsuario;
+};

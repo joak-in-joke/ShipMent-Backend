@@ -1,33 +1,36 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
-
-const datalcl = database.define('datalcl',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class DataLCL extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      DataLCL.belongsTo(models.Puerto, {
+        foreignKey: "id_puerto_destino",
+      });
+      DataLCL.belongsTo(models.DataEmbarque, {
+        foreignKey: "id_data",
+        onDelete: "CASCADE",
+      });
+    }
+  }
+  DataLCL.init(
+    {
+      id_data: DataTypes.INTEGER,
+      id_puerto_destino: DataTypes.INTEGER,
+      contenedor: DataTypes.STRING,
+      cant_bultos: DataTypes.INTEGER,
+      peso: DataTypes.NUMERIC,
+      volumen: DataTypes.NUMERIC,
+      lugar_destino: DataTypes.STRING,
     },
-    id_data:{
-        type: sequelize.INTEGER
-    },
-    contenedor:{
-        type: sequelize.TEXT
-    },
-    cant_bultos:{
-        type: sequelize.INTEGER
-    },
-    peso:{
-        type: sequelize.INTEGER
-    },
-    volumen:{
-        type: sequelize.INTEGER
-    },
-    lugar_destino:{
-        type: sequelize.TEXT
-    }    
-    },{
-        timestamps: false,
-        tableName: 'datalcl'
-    });
-
-export default datalcl;
+    {
+      sequelize,
+      modelName: "DataLCL",
+    }
+  );
+  return DataLCL;
+};

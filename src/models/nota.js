@@ -1,24 +1,29 @@
-import sequelize from 'sequelize';
-import {database} from '../database/database';
-
-const nota = database.define('nota',{
-
-    id:{
-        type: sequelize.INTEGER,
-        primaryKey: true
-    },
-    id_usuario:{
-        type: sequelize.INTEGER
-    },
-    contenido:{
-        type: sequelize.TEXT
-    },
-    creado:{
-        type: sequelize.DATE
+"use strict";
+const { Model } = require("sequelize");
+module.exports = (sequelize, DataTypes) => {
+  class Nota extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      Nota.belongsTo(models.Usuario, {
+        foreignKey: "id_usuario",
+        onDelete: "CASCADE",
+      });
     }
-    },{
-        timestamps: false,
-        tableName: 'nota'
-    });
-
-export default nota;
+  }
+  Nota.init(
+    {
+      id_usuario: DataTypes.INTEGER,
+      contenido: DataTypes.TEXT,
+      creado: DataTypes.DATE,
+    },
+    {
+      sequelize,
+      modelName: "Nota",
+    }
+  );
+  return Nota;
+};

@@ -34,13 +34,13 @@ export async function createMissions(req, res) {
 }
 
 export async function getAllMissions(req, res) {
-  try {
-    const data = await misionero.findAll({});
+  const allMisiones = await misionero.findAll({
+    attributes: ["id", "contenido", "creado", "estado"],
+    order: [["id", "DESC"]],
+    attributes: ["id", "contenido", "estado"],
+  });
 
-    res.json(data);
-  } catch (e) {
-    console.log(e);
-  }
+  res.json(allMisiones);
 }
 
 export async function getMision(req, res) {
@@ -52,13 +52,7 @@ export async function getMision(req, res) {
       },
       attributes: ["id", "contenido", "estado"],
     });
-
-    const payload = {
-      id: mision.id,
-      contenido: mision.contenido,
-      estado: mision.estado,
-    };
-    res.json({ resultado: true, data: payload });
+    res.json({ resultado: true, mision });
   } catch (error) {
     console.log({ resultado: false, error });
   }
@@ -73,14 +67,9 @@ export async function getActiveMissions(req, res) {
       attributes: ["id", "contenido", "estado"],
       order: [["id", "DESC"]],
     });
-    const payload = {
-      id: mision.id,
-      contenido: mision.contenido,
-      estado: mision.estado,
-    };
-    res.json({ resultado: true, data: payload });
+    res.json({ resultado: true, activas });
   } catch (error) {
-    console.log({ resultado: false, message: error });
+    console.log({ resultado: false, error });
   }
 }
 
@@ -100,7 +89,7 @@ export async function getFinalizedMissions(req, res) {
 }
 
 export async function deleteMision(req, res) {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
     const deletemisionera = await misionero.destroy({
@@ -118,11 +107,13 @@ export async function deleteMision(req, res) {
 }
 
 export async function updateMision(req, res) {
-  const { id, contenido } = req.body;
+  const { id } = req.params;
+  const { contenido, estado } = req.body;
 
   const misionUpdate = await misionero.update(
     {
       contenido,
+      estado,
     },
     {
       where: { id },

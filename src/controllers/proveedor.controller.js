@@ -2,7 +2,7 @@ import sequelize, { json } from "sequelize";
 import proveedor from "../models/proveedor";
 import contactoproveedor from "../models/contacto_proveedor";
 import cuenta from "../models/cuentabanproveedor";
-// import cuentabanproveedor from "../models/cuentabanproveedor";
+import cuentabanproveedor from "../models/cuentabanproveedor";
 
 export async function createProvider(req, res) {
   const {
@@ -10,6 +10,7 @@ export async function createProvider(req, res) {
     pais,
     rut,
     direccion,
+
     email,
     telefono,
 
@@ -47,7 +48,7 @@ export async function createProvider(req, res) {
         telefono: fono,
       },
       {
-        fields: ["id_proveedor", "nombre", "cargo", "email", "telefono"],
+        fields: ["id_proveedor", "nombre_proveedor", "cargo", "email", "fono"],
       }
     );
     const newCuentaBanco = await cuenta.create(
@@ -95,26 +96,7 @@ export async function createProvider(req, res) {
 }
 
 export async function getAllProviders(req, res) {
-  const proveedores = await proveedor.findAll({
-    include: [
-      {
-        model: contactoproveedor,
-        as: "contacto_proveedor",
-        attributes: ["nombre", "cargo", "telefono", "email"],
-      },
-      {
-        model: cuenta,
-        as: "cuenta_contacto",
-        attributes: [
-          "n_cuenta",
-          "email",
-          "rut",
-          "nombre_empresa",
-          "banco",
-          "tipo_cuenta",
-        ],
-      },
-    ],
+  const allProveedores = await proveedor.findAll({
     attributes: [
       "id",
       "nombre",
@@ -124,8 +106,25 @@ export async function getAllProviders(req, res) {
       "email",
       "telefono",
     ],
+    order: [["id", "DESC"]],
   });
-  res.json({ proveedores });
+  const allContacts = await contactoproveedor.findAll({
+    attributes: ["id", "nombre", "cargo", "telefono", "email"],
+    order: [["id", "DESC"]],
+  });
+  const allaccounts = await cuenta.findAll({
+    attributes: [
+      "id",
+      "n_cuenta",
+      "email",
+      "rut",
+      "nombre_empresa",
+      "banco",
+      "tipo_cuenta",
+    ],
+    order: [["id", "DESC"]],
+  });
+  res.json({ allProveedores, allContacts, allaccounts });
 }
 
 export async function getProvider(req, res) {
@@ -202,7 +201,8 @@ export async function getProvider(req, res) {
 }
 
 export async function deleteProvider(req, res) {
-  const { id } = req.body;
+  const { id } = req.params;
+
   try {
     //primero bsucamos si tiene, si hay eliminamos la cuenta, los datos del banco y finalmente el proveedor
     const findProveedor = await proveedor.findOne({
@@ -245,8 +245,8 @@ export async function deleteProvider(req, res) {
 }
 
 export async function updateProvider(req, res) {
+  const { id } = req.params;
   const {
-    id,
     nombre,
     pais,
     rut,
@@ -309,17 +309,4 @@ export async function updateProvider(req, res) {
     resultado: true,
     message: "Proveedor update Succesfully! (: ",
   });
-}
-
-//obtener el listado de id y nombres de proveedores
-export async function getProviderList(req, res) {
-  try {
-    const getprovider = await proveedor.findAll({
-      attributes: ["id", "nombre"],
-    });
-
-    res.json({ resultado: true, getprovider });
-  } catch (e) {
-    res.json({ resultado: false, error: e });
-  }
 }

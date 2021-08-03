@@ -3,19 +3,18 @@ import usuarios from "../models/users";
 import datausuario from "../models/datausuario";
 import roles from "../models/roles";
 import permisos from "../models/permisos";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 import config from "../config";
 import jwt from "jsonwebtoken";
-import md5 from "md5";
 
-export const comparePassword = async (password, receivePassword) => {
-  return await bcrypt.compare(password, receivePassword);
-};
+// export const comparePassword = async (password, receivePassword) => {
+//   return await bcrypt.compare(password, receivePassword);
+// };
 
-export const encryptPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(password, salt);
-};
+// export const encryptPassword = async (password) => {
+//   const salt = await bcrypt.genSalt(10);
+//   return await bcrypt.hash(password, salt);
+// };
 
 export const consulRol = async (id) => {
   const codRol = await roles.findOne({
@@ -74,8 +73,9 @@ export const signUp = async (req, res) => {
 };
 
 export const signIn = async (req, res) => {
-  const { mail, pass } = req.body;
-  // const mail = email;
+  const { email, pass } = req.body;
+  console.log(email, pass);
+  const mail = email;
   let bool = false;
   const user = await datausuario.findOne({
     where: { mail },
@@ -87,24 +87,13 @@ export const signIn = async (req, res) => {
       "rut",
       "dv",
       "pass",
-      "mail",
-      "asesor",
-      "telefono",
-      "cargo",
     ],
   });
   if (user) {
-    const comparePassword = async (password, receivePassword) => {
-      return await bcrypt.compare(password, receivePassword);
-    };
-    const pas = await encryptPassword(pass);
-    const matchPassword = await comparePassword(pass, user.pass);
+    //const matchPassword = await comparePassword(password, user.password);
     let user_token = null;
-
-    if (matchPassword) {
-
-      //if (user.pass === pass) {
-
+    // if (matchPassword) {
+    if (user.pass === pass) {
       user_token = jwt.sign({ id: user.id_usuario }, config.SECRET, {
         expiresIn: "12h",
       });
@@ -114,21 +103,16 @@ export const signIn = async (req, res) => {
         id: user.id_usuario,
         nombre: user.nombre,
         apellido: user.apellido,
-        rut: user.rut,
-        dv: user.dv,
-        mail: user.mail,
-        telefono: user.telefono,
-        asesor: user.asesor,
-        cargo: user.cargo,
+        rut: user.rut + user.dv,
         permisos: codRol,
       };
       bool = true;
       res.json({ Resultado: bool, usuario: result, token: user_token });
     } else {
-      res.json({ resultado: bool, message: "Credenciales incorrectas primer if" });
+      res.json({ resultado: bool, message: "Credenciales incorrectas" });
     }
   } else {
-    res.json({ resultado: bool, message: "Credenciales incorrectas segundo if" });
+    res.json({ resultado: bool, message: "Credenciales incorrectas" });
   }
 };
 

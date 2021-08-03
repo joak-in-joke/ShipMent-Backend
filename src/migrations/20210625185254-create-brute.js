@@ -4,6 +4,7 @@ module.exports = {
     await queryInterface.createTable("brutes", {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.TEXT,
       },

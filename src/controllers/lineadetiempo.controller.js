@@ -195,18 +195,17 @@ export async function finishTimeline(req, res) {
   const { id } = req.body;
   try {
     const TimelineUpdate = await lineadetiempo.update(
-      { estado: "finalizado" },
-      { where: { id_embarque: id } }
-    );
-    const embarqueData = await embarques.update(
-      { estado: "finalizado" },
-      { where: { id } }
+      {
+        estado: "Finalizado",
+      },
+      {
+        where: { id_embarque: id },
+      }
     );
     res
       .json({
         resultado: true,
         TimelineUpdate,
-        embarqueData,
       })
       .status(200);
   } catch (error) {

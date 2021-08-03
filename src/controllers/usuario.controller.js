@@ -1,15 +1,6 @@
 import sequelize from "sequelize";
 import user from "../models/usuario";
 import datauser from "../models/datausuario";
-import permisos from "../models/permisos";
-import jwt from "jsonwebtoken";
-import config from "../config";
-import bcrypt from "bcryptjs";
-
-const encryptPassword = async (password) => {
-  const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(password, salt);
-};
 
 export async function createUser(req, res) {
   const {
@@ -19,91 +10,64 @@ export async function createUser(req, res) {
     rut,
     dv,
     mail,
+    estado,
     cargo,
     asesor,
     telefono,
     pass,
-    permission,
   } = req.body;
   try {
-    const getMail = await datauser.findOne({
-      where: { mail },
-    });
-    if (getMail) {
-      res.json("el mail ingresado ya existe");
-    } else {
-      const newUser = await user.create(
+    const newUser = await user.create(
+      {
+        tipo,
+      },
+      {
+        fields: ["tipo"],
+        attributes: ["id"],
+      }
+    );
+    console.log(newUser);
+    if (newUser) {
+      const newDataUser = await datauser.create(
         {
-          tipo,
+          id_usuario: newUser.id,
+          nombre,
+          apellido,
+          rut,
+          dv,
+          mail,
+          estado,
+          cargo,
+          asesor,
+          telefono,
+          pass,
         },
         {
-          fields: ["tipo"],
-          attributes: ["id"],
+          fields: [
+            "id_usuario",
+            "nombre",
+            "apellido",
+            "rut",
+            "dv",
+            "mail",
+            "estado",
+            "cargo",
+            "asesor",
+            "telefono",
+            "pass",
+          ],
         }
       );
-      if (newUser) {
-        const user_token = jwt.sign({ id: newUser.id }, config.SECRET, {
-          expiresIn: 120,
-        });
-
-        datauser.create(
-          {
-            id_usuario: newUser.id,
-            nombre,
-            apellido,
-            rut,
-            dv,
-            mail,
-            cargo,
-            asesor,
-            telefono,
-            pass: await encryptPassword(pass),
-          },
-          {
-            fields: [
-              "id_usuario",
-              "nombre",
-              "apellido",
-              "rut",
-              "dv",
-              "mail",
-              "cargo",
-              "asesor",
-              "telefono",
-              "pass",
-            ],
-          }
-        );
-        permisos.create(
-          {
-            id_usuario: newUser.id,
-            perm_finanza: permission.finanzas,
-            perm_misiones: permission.misiones,
-            perm_superuser: permission.superuser,
-            perm_admin: permission.admin,
-          },
-          {
-            fields: [
-              "id_usuario",
-              "perm_finanza",
-              "perm_misiones",
-              "perm_superuser",
-              "perm_admin",
-            ],
-          }
-        );
-        return res.json({
-          respuesta: true,
-          message: "User created",
-          token: user_token,
-        });
-      } else {
-        console.log(error);
-        res.status(500).json({
-          respuesta: false,
-          message: "Oops algo salio mal/:",
-        });
-      }
+      return res.json({
+        respuesta: true,
+        message: "User created",
+      });
+    } else {
+      console.log(error);
+      res.status(500).json({
+        respuesta: false,
+        message: "Oops algo salio mal/:",
+      });
     }
   } catch (error) {
     console.log(error);
@@ -115,11 +79,41 @@ export async function createUser(req, res) {
 }
 
 export async function getAllUsers(req, res) {
-  const alldatauser = await datauser.findAll({
-    attributes: ["id_usuario", "nombre", "apellido", "telefono"],
+  const allUsers = await user.findAll({
+    attributes: ["id", "tipo"],
     order: [["id", "DESC"]],
   });
-  res.json({ resultado: true, users: alldatauser }).status(200);
+  const alldatauser = await datauser.findAll({
+    attributes: [
+      "id_usuario",
+      "nombre",
+      "apellido",
+      "rut",
+      "dv",
+      "mail",
+      "estado",
+      "cargo",
+      "asesor",
+      "telefono",
+      "pass",
+    ],
+    order: [["id", "DESC"]],
+  });
+
+  const payload = {
+    tipo: user.tipo,
+    nombre: user.nombre,
+    apellido: user.apellido,
+    rut: user.rut,
+    dv: user.tidvpo,
+    mail: user.mail,
+    estado: user.estado,
+    cargo: user.cargo,
+    asesor: user.asesor,
+    telefono: user.telefono,
+    pass: user.pass,
+  };
+  res.json({ respuesta: true, message: allUsers, alldatauser });
 }
 
 export async function getUser(req, res) {
@@ -129,12 +123,12 @@ export async function getUser(req, res) {
       where: {
         id,
       },
-      attributes: ["id"],
+      attributes: ["id", "tipo"],
     });
     if (finduser) {
       const finddatauser = await datauser.findOne({
         where: {
-          id_usuario: id,
+          id_usuario: finduser.id,
         },
         attributes: [
           "id",
@@ -143,21 +137,11 @@ export async function getUser(req, res) {
           "rut",
           "dv",
           "mail",
+          "estado",
           "cargo",
           "asesor",
           "telefono",
           "pass",
-        ],
-      });
-      const permUser = await permisos.findOne({
-        where: {
-          id_usuario: finduser.id,
-        },
-        attributes: [
-          "perm_finanza",
-          "perm_misiones",
-          "perm_superuser",
-          "perm_admin",
         ],
       });
 
@@ -167,17 +151,16 @@ export async function getUser(req, res) {
         nombre: finddatauser.nombre,
         apellido: finddatauser.apellido,
         rut: finddatauser.rut,
-        dv: finddatauser.dv,
+        dv: finddatauser.tidvpo,
         mail: finddatauser.mail,
         estado: finddatauser.estado,
         cargo: finddatauser.cargo,
         asesor: finddatauser.asesor,
         telefono: finddatauser.telefono,
         pass: finddatauser.pass,
-        permUser: permUser,
       };
 
-      res.json({ respuesta: true, data: payload });
+      res.json({ respuesta: true, message: payload });
     } else {
       res.json({
         respuesta: false,
@@ -185,7 +168,7 @@ export async function getUser(req, res) {
       });
     }
   } catch (error) {
-    res.json({
+    console.log({
       respuesta: false,
       message:
         "No se pudo obtener el usuario, intente denuevo, si el problema persiste contacte con soporte",
@@ -194,7 +177,7 @@ export async function getUser(req, res) {
 }
 
 export async function deleteUser(req, res) {
-  const { id } = req.body;
+  const { id } = req.params;
 
   try {
     //primero bsucamos si tiene, si hay eliminamos los datos asociados
@@ -205,11 +188,6 @@ export async function deleteUser(req, res) {
     });
     if (finduser) {
       //primero eliminamos la cuenta asociada a user
-      const deletepermission = await permisos.destroy({
-        where: {
-          id_usuario: id,
-        },
-      });
       const deleteCuenta = await datauser.destroy({
         where: {
           id_usuario: id,
@@ -243,8 +221,8 @@ export async function deleteUser(req, res) {
 }
 
 export async function updateUser(req, res) {
+  const { id } = req.params;
   const {
-    id,
     tipo,
     nombre,
     apellido,
@@ -255,8 +233,7 @@ export async function updateUser(req, res) {
     cargo,
     asesor,
     telefono,
-    // pass,
-    //permission,
+    pass,
   } = req.body;
 
   const updateUser = await user.update(
@@ -279,69 +256,15 @@ export async function updateUser(req, res) {
       cargo,
       asesor,
       telefono,
-      // pass: await encryptPassword(pass),
+      pass,
     },
     {
       where: { id_usuario: id },
     }
   );
-  // const UpdatePermisos = permisos.update(
-  //   {
-  //     perm_finanza: permission.finanzas,
-  //     perm_misiones: permission.misiones,
-  //     perm_superuser: permission.superuser,
-  //     perm_admin: permission.admin,
-  //   },
-  //   {
-  //     where: { id_usuario: id },
-  //   }
-  // );
 
   res.json({
     respuesta: true,
     message: "User update Succesfully! (: ",
   });
-}
-
-export async function updatePassword(req, res) {
-  const { id, password, newPassword } = req.body;
-
-  //busco el man
-  const getuser = await user.findOne({
-    where: {
-      id,
-    },
-  });
-  //si encuentra comparo las pass
-  if (getuser) {
-    const comparePassword = async (password, receivePassword) => {
-      return await bcrypt.compare(password, receivePassword);
-    };
-    //busco el datauser
-    const getdatauser = await datauser.findOne({
-      where: {
-        id_usuario: getuser.id,
-      },
-    });
-    const matchPassword = await comparePassword(password, getdatauser.pass);
-    //si las pass coinciden chiao
-    if (matchPassword) {
-      //if (getdatauser.pass === password) {
-      //getdatauser.pass = encryptPassword(newpass)
-      const updatePassword = await datauser.update(
-        {
-          pass: await encryptPassword(newPassword),
-        },
-        {
-          where: {
-            id_usuario: getuser.id,
-          },
-        }
-      );
-
-      res.json({ respuesta: true, message: "contraseña modificada" });
-    } else {
-      res.json({ respuesta: false, message: "las contraseñas no coinciden" });
-    }
-  }
 }

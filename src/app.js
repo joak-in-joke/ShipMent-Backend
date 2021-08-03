@@ -2,7 +2,6 @@ import "@babel/polyfill";
 var cors = require("cors");
 
 const express = require("express");
-const fileUpload = require("express-fileupload");
 const morgan = require("morgan");
 //const path = require('path');
 //const cors = require('cors');
@@ -39,7 +38,7 @@ import timeline from "./routes/lineadetiempo.routes";
 import proveedores from "./routes/proveedores.routes";
 import clientes from "./routes/cliente.routes";
 import user from "./routes/usuario.routes";
-import valordata from "./routes/valordata.routes";
+
 //routes
 
 app.use(cors());
@@ -50,9 +49,8 @@ app.use("/dataembarque", dataembarque);
 app.use("/timeline", timeline);
 app.use("/provider", proveedores);
 app.use("/client", clientes);
-app.use("/users", user);
-app.use("/valordata", valordata);
-app.use(fileUpload());
+app.use("/user", user);
+
 //public
 
 //app.use(express.static('../public'));

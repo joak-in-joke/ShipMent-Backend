@@ -38,6 +38,7 @@ import timeline from "./routes/lineadetiempo.routes";
 import proveedores from "./routes/proveedores.routes";
 import clientes from "./routes/cliente.routes";
 import user from "./routes/usuario.routes";
+import prueba from "./routes/prueba.routes";
 
 //routes
 
@@ -50,6 +51,7 @@ app.use("/timeline", timeline);
 app.use("/provider", proveedores);
 app.use("/client", clientes);
 app.use("/user", user);
+app.use("/prueba", prueba);
 
 //public
 

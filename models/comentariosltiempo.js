@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ComentariosLTiempo.belongsTo(models.Usuario, {
+      ComentariosLTiempo.belongsTo(models.Usuarios, {
         foreignKey: "id_usuario",
         onDelete: "CASCADE",
       });

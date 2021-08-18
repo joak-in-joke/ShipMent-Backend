@@ -7,7 +7,7 @@ module.exports = {
       [
         {
           id_usuario: 1,
-          id_cliente_proveedor: 1,
+          id_proveedor_cliente: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },

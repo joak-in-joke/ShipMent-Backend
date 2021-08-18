@@ -1,16 +1,17 @@
 const { response } = require("express");
-const sequelize = require("sequelize");
-const dataUser = require("../../models/datausuario");
-const user = require("../../models/usuario");
+
+var models = require("../../models");
+var Usuario = models.Usuarios;
+var DataUsuario = models.DataUsuario;
 
 const getUsers = async (req, res = response) => {
   try {
-    const userResponse = await user.findAll({
+    const allUsers = await Usuario.findAll({
       attributes: ["id", "tipo"],
       order: [["id", "DESC"]],
     });
 
-    const userDataResponse = await dataUser.findAll({
+    const allUsersData = await DataUsuario.findAll({
       attributes: [
         "id_usuario",
         "nombre",
@@ -24,19 +25,7 @@ const getUsers = async (req, res = response) => {
       ],
       order: [["id", "DESC"]],
     });
-
-    const payload = {
-      tipo: userResponse.tipo,
-      nombre: userDataResponse.nombre,
-      apellido: userDataResponse.apellido,
-      rut: userDataResponse.rut,
-      mail: userDataResponse.mail,
-      estado: userDataResponse.estado,
-      cargo: userDataResponse.cargo,
-      cargo: userDataResponse.cargo,
-      telefono: userDataResponse.telefono,
-    };
-    res.json({ resultado: true, users: { allUsers, alldatauser } });
+    res.json({ resultado: true, users: { allUsers, allUsersData } });
   } catch (error) {
     console.log(error);
     res.status.json({ resultado: false, message: error });

@@ -8,24 +8,12 @@ const getUsers = async (req, res = response) => {
   try {
     const allUsers = await Usuario.findAll({
       attributes: ["id", "tipo"],
+      include: {
+        model: DataUsuario,
+      },
       order: [["id", "DESC"]],
     });
-
-    const allUsersData = await DataUsuario.findAll({
-      attributes: [
-        "id_usuario",
-        "nombre",
-        "apellido",
-        "rut",
-        "email",
-        "estado",
-        "cargo",
-        "ciudad",
-        "telefono",
-      ],
-      order: [["id", "DESC"]],
-    });
-    res.json({ resultado: true, users: { allUsers, allUsersData } });
+    res.json({ resultado: true, users: allUsers });
   } catch (error) {
     console.log(error);
     res.status.json({ resultado: false, message: error });

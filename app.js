@@ -9,6 +9,7 @@ const port = 4000;
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var misionsRouter = require('./routes/misions');
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/mision', misionsRouter);
+app.use('/auth', authRouter);
 
 app.listen(port, () => {
     console.log(`Shipment Backend initialized`)

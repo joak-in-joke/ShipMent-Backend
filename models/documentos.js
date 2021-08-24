@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       Documentos.belongsTo(models.DataEmbarque, {
         foreignKey: "id_embarque",
       });
-      Documentos.hasMany(models.Documento, {
+      Documentos.hasMany(models.DocumentoSingle, {
         foreignKey: "id_documentos",
       });
     }

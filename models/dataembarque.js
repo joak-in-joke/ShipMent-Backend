@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       DataEmbarque.belongsTo(models.OperadorLogistico, {
         foreignKey: "id_operador",
       });
-      DataEmbarque.belongsTo(models.OperadorLogistico, {
+      DataEmbarque.belongsTo(models.AgenciaAduana, {
         foreignKey: "id_agencia",
       });
       DataEmbarque.hasOne(models.Documentos, {

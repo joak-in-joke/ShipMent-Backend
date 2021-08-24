@@ -6,19 +6,22 @@ var DataUsuario = models.DataUsuario;
 var PermisosUsuario = models.Permisos;
 
 const getUsersId = async (req, res = response) => {
-    const { id } = req.params;
+  const { id } = req.params;
   try {
     const user = await Usuario.findOne({
       where: { id },
-      include: [{
+      include: [
+        {
           model: DataUsuario,
-        //   as: "Data",
-        //   required: true,
-      }, {
+          //   as: "Data",
+          //   required: true,
+        },
+        {
           model: PermisosUsuario,
-        //   as: "Permisos",
-        //   required: true,
-      }]
+          //   as: "Permisos",
+          //   required: true,
+        },
+      ],
     });
 
     res.json({ resultado: true, user });

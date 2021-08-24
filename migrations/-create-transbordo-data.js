@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         references: {
-          model: "DataEmbarque",
+          model: "DataEmbarques",
           key: "id",
           as: "id_data",
         },
@@ -20,7 +20,7 @@ module.exports = {
       id_puerto_transbordo: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Puerto",
+          model: "Puertos",
           key: "id",
           as: "id_puerto_transbordo",
         },

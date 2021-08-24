@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("DataEmbarque", {
+    await queryInterface.createTable("DataEmbarques", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         onDelete: "CASCADE",
         references: {
-          model: "Embarque",
+          model: "Embarques",
           key: "id",
           as: "id_embarque",
         },
@@ -20,7 +20,7 @@ module.exports = {
       id_puerto_embarque: {
         type: Sequelize.INTEGER,
         references: {
-          model: "Puerto",
+          model: "Puertos",
           key: "id",
           as: "id_puerto_embarque",
         },
@@ -44,7 +44,7 @@ module.exports = {
       id_operador: {
         type: Sequelize.INTEGER,
         references: {
-          model: "OperadorLogistico",
+          model: "OperadorLogisticos",
           key: "id",
           as: "id_operador",
         },
@@ -52,7 +52,7 @@ module.exports = {
       id_agencia: {
         type: Sequelize.INTEGER,
         references: {
-          model: "AgenciaAduana",
+          model: "AgenciaAduanas",
           key: "id",
           as: "id_agencia",
         },
@@ -98,6 +98,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("DataEmbarque");
+    await queryInterface.dropTable("DataEmbarques");
   },
 };

@@ -12,6 +12,7 @@ var usersRouter = require("./routes/users");
 var shipmentsRouter = require("./routes/shipments");
 var shipmentRouter = require("./routes/shipment");
 var misionsRouter = require('./routes/misions');
+var authRouter = require('./routes/auth');
 
 
 var app = express();
@@ -29,6 +30,7 @@ app.use("/users", usersRouter);
 app.use("/shipments", shipmentsRouter);
 app.use("/shipment", shipmentRouter);
 app.use('/mision', misionsRouter);
+app.use('/auth', authRouter);
 
 
 app.listen(port, () => {

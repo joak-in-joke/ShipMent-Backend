@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     creado: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'Mision',
+    modelName: 'Misions',
   });
   return Mision;
 };

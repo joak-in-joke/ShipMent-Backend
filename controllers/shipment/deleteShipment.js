@@ -3,9 +3,8 @@ const { response } = require("express");
 var models = require("../../models");
 var Embarque = models.Embarque;
 
-const deleteShipments = async (req, res = response) => {
+const deleteShipment = async (req, res = response) => {
   var req = req.body.data;
-  console.log(req);
   try {
     await Embarque.destroy({ where: { id: req } });
 
@@ -16,4 +15,4 @@ const deleteShipments = async (req, res = response) => {
   }
 };
 
-module.exports = deleteShipments;
+module.exports = deleteShipment;

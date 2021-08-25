@@ -1,5 +1,7 @@
-var signIn = require('./signIn');
+var signIn = require("./signIn");
+var verifyToken = require("./verifyToken");
 
 module.exports = {
-    signIn
+  signIn,
+  verifyToken,
 };

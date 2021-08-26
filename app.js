@@ -34,7 +34,7 @@ app.use('/auth', authRouter);
 
 
 app.listen(port, () => {
-  console.log(`Shipment Backend initialized`);
+  console.log(`Shipment Backend initialized puerto: ${port}`);
 });
 
 module.exports = app;

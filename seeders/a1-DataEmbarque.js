@@ -10,7 +10,7 @@ module.exports = {
           id_importador: 1,
           id_operador: 1,
           id_agencia: 1,
-          tipo_operacion: "Importacion",
+          tipo_operacion: "importacion",
           incoterm: "Incoterm",
           tipo_documento: "Excel",
           documento: "Excel",

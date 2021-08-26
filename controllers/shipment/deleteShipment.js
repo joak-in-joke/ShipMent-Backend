@@ -4,7 +4,7 @@ var models = require("../../models");
 var Embarque = models.Embarque;
 
 const deleteShipment = async (req, res = response) => {
-  var req = req.body.data;
+  var req = req.body.id;
   try {
     await Embarque.destroy({ where: { id: req } });
 

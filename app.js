@@ -6,14 +6,13 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const port = 4000;
 
-
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var shipmentsRouter = require("./routes/shipments");
 var shipmentRouter = require("./routes/shipment");
-var misionsRouter = require('./routes/misions');
-var authRouter = require('./routes/auth');
-
+var misionsRouter = require("./routes/misions");
+var authRouter = require("./routes/auth");
+var dashboardRouter = require("./routes/dashboard");
 
 var app = express();
 
@@ -24,14 +23,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/shipments", shipmentsRouter);
 app.use("/shipment", shipmentRouter);
-app.use('/mision', misionsRouter);
-app.use('/auth', authRouter);
-
+app.use("/mision", misionsRouter);
+app.use("/auth", authRouter);
+app.use("/dashboard", dashboardRouter);
 
 app.listen(port, () => {
   console.log(`Shipment Backend initialized`);

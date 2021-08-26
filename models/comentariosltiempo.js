@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ComentariosLTiempo",
+      paranoid: true,
     }
   );
   return ComentariosLTiempo;

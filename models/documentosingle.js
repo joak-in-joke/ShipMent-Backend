@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "DocumentoSingle",
+      paranoid: true,
     }
   );
   return DocumentoSingle;

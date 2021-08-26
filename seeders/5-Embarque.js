@@ -9,7 +9,7 @@ module.exports = {
           referencia: "EXP_FCL_CL_BR",
           etd: new Date(),
           eta: new Date(),
-          media_transporte: "Camion",
+          media_transporte: "FCL",
           createdAt: new Date(),
           updatedAt: new Date(),
         },

@@ -2,9 +2,9 @@ var express = require("express");
 var router = express.Router();
 
 // Import controllers
-var { signIn } = require("../controllers/auth");
+var { getState } = require("../controllers/dashboard");
 
 // Routes
-router.post("/signin", signIn);
+router.get("/state", getState);
 
 module.exports = router;

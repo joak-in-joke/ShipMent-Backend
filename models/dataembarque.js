@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_embarque",
       });
       DataEmbarque.hasMany(models.ValorData, {
-        foreignKey: "id_embarque",
+        foreignKey: "id_data",
       });
       DataEmbarque.hasMany(models.TransbordoData, {
         foreignKey: "id_data",

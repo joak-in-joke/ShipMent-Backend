@@ -123,8 +123,8 @@ const getShipment = async (req, res = response) => {
       });
     });
 
-    switch (tipoOperacion) {
-      case "fcl":
+    switch (medio_transporte) {
+      case "FCL":
         DataFCL.create({
           id_data: newDataShipment.id,
           id_puerto_destino: fcl.id_puerto_destino,
@@ -134,7 +134,7 @@ const getShipment = async (req, res = response) => {
           lugar_destino: fcl.lugar_destino,
         });
         break;
-      case "lcl":
+      case "LCL":
         DataLCL.create({
           id_data: newDataShipment.id,
           id_puerto_transbordo: lcl.id_puerto_transbordo,

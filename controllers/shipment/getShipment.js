@@ -38,9 +38,11 @@ const getShipment = async (req, res = response) => {
             },
             {
               model: DataFCL,
+              include: [{ model: Puerto }],
             },
             {
               model: DataLCL,
+              include: [{ model: Puerto }],
             },
           ],
         },

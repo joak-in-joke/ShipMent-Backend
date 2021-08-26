@@ -72,6 +72,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "DataEmbarque",
+      paranoid: true,
     }
   );
   return DataEmbarque;

@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "LineaDeTiempo",
+      paranoid: true,
     }
   );
   return LineaDeTiempo;

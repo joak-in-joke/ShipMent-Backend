@@ -1,4 +1,5 @@
 const { response } = require("express");
+var Sequelize = require("sequelize");
 
 var models = require("../../models");
 var Embarque = models.Embarque;

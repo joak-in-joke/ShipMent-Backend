@@ -13,7 +13,7 @@ const getShipments = async (req, res = response) => {
     res.json({ resultado: true, data: allShipments });
   } catch (error) {
     console.log(error);
-    res.status.json({ resultado: false, message: error });
+    res.json({ resultado: false, message: error });
   }
 };
 

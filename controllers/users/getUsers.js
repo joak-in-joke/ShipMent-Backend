@@ -16,7 +16,7 @@ const getUsers = async (req, res = response) => {
     res.json({ resultado: true, users: allUsers });
   } catch (error) {
     console.log(error);
-    res.status.json({ resultado: false, message: error });
+    res.status(400).json({ resultado: false, message: error });
   }
 };
 

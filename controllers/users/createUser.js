@@ -106,7 +106,7 @@ const createUser = async (req, res = response) => {
     }
   } catch (error) {
     console.log(error);
-    res.status.json({ resultado: false, message: error });
+    res.status(400).json({ resultado: false, message: error });
   }
 };
 

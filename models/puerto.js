@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       Puerto.hasMany(models.DataFCL, {
         foreignKey: "id_puerto_destino",
       });
-      Puerto.hasMany(models.DataEmbarque, {
+      Puerto.hasMany(models.DataEmbarques, {
         foreignKey: "id_puerto_embarque",
       });
     }

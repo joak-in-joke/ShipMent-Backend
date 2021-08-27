@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_usuario",
         onDelete: "CASCADE",
       });
-      ComentariosLTiempo.belongsTo(models.LineaDeTiempo, {
+      ComentariosLTiempo.belongsTo(models.LineaDeTiempos, {
         foreignKey: "id_linea_tiempo",
       });
     }
@@ -30,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ComentariosLTiempo",
-      paranoid: true,
+      modelName: "ComentariosLTiempos",
+      //paranoid: true,
     }
   );
   return ComentariosLTiempo;

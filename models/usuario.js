@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
       Usuario.hasOne(models.DataUsuario, {
         foreignKey: "id_usuario",
       });
-      Usuario.hasOne(models.UsuarioProvCli, {
+      Usuario.hasOne(models.UsuarioProvClis, {
         foreignKey: "id_usuario",
       });
       Usuario.hasMany(models.Nota, {
         foreignKey: "id_usuario",
       });
-      Usuario.hasMany(models.ComentariosLTiempo, {
+      Usuario.hasMany(models.ComentariosLTiempos, {
         foreignKey: "id_usuario",
       });
     }

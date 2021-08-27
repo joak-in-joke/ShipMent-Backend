@@ -28,7 +28,7 @@ module.exports = {
       id_exportador: {
         type: Sequelize.INTEGER,
         references: {
-          model: "ProveedorCliente",
+          model: "ProveedorClientes",
           key: "id",
           as: "id_exportador",
         },
@@ -36,7 +36,7 @@ module.exports = {
       id_importador: {
         type: Sequelize.INTEGER,
         references: {
-          model: "ProveedorCliente",
+          model: "ProveedorClientes",
           key: "id",
           as: "id_importador",
         },

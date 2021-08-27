@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       CuentaBanco.belongsTo(models.ProveedorCliente, {
-        foreignKey: "id_proveedor_cliente",
+        foreignKey: "id_proveedore_cliente",
       });
     }
   }
@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "CuentaBancos",
+      modelName: "CuentaBanco",
+      paranoid: true,
     }
   );
   return CuentaBanco;

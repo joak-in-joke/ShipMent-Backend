@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "id_embarque",
         onDelete: "CASCADE",
       });
-      DataEmbarque.hasOne(models.LineaDeTiempos, {
+      DataEmbarque.hasOne(models.LineaDeTiempo, {
         foreignKey: "id_embarque",
       });
       DataEmbarque.hasOne(models.Finanza, {
@@ -71,7 +71,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "DataEmbarques",
+      modelName: "DataEmbarque",
+      paranoid: true,
     }
   );
   return DataEmbarque;

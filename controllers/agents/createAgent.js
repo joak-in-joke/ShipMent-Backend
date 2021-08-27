@@ -2,25 +2,24 @@ const { response } = require("express");
 var sequelize = require("sequelize");
 
 var models = require("../../models");
-var Puerto = models.Puerto;
+var AgenciaAduana = models.AgenciaAduana;
 
-const createPort = async (req, res = response) => {
-  const { nombre, tipo } = req.body;
+const createAgent = async (req, res = response) => {
+  const { nombre } = req.body;
   try {
-    port = await Puerto.create(
+    agent = await AgenciaAduana.create(
       {
         nombre,
-        tipo,
       },
       {
-        fields: ["nombre", "tipo"],
+        fields: ["nombre"],
       }
     );
-    return res.json({ resultado: true, id: port.id });
+    return res.json({ resultado: true, id: agent.id });
   } catch (error) {
     console.log(error);
     res.status(500).json({ resultado: false, message: error });
   }
 };
 
-module.exports = createPort;
+module.exports = createAgent;

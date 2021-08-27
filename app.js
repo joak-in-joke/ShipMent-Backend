@@ -16,6 +16,8 @@ var dashboardRouter = require("./routes/dashboard");
 var portsRouter = require("./routes/ports");
 var providerRouter = require("./routes/provider");
 var timelineRouter = require("./routes/timeline");
+var agentRouter = require("./routes/agent");
+var operatorRouter = require("./routes/operator");
 
 var app = express();
 
@@ -36,6 +38,8 @@ app.use("/dashboard", dashboardRouter);
 app.use("/port", portsRouter);
 app.use("/provider", providerRouter);
 app.use("/timeline", timelineRouter);
+app.use("/agent", agentRouter);
+app.use("/operator", operatorRouter);
 
 app.listen(port, () => {
   console.log(`Shipment Backend initialized puerto: ${port}`);

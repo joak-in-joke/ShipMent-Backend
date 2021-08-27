@@ -1,0 +1,33 @@
+{
+      "n_operacion":123,
+      "tipo_operacion":"importacion",
+      "medio_transporte":"FCL",
+      "eta":"2021-11-12",
+      "etd":"2021-11-10",
+      "referencia":"XP_FCL",
+      "incoterm":"FAS",
+      "id_puerto_embarque":1,****
+      "id_puerto_destino":1,*****
+      "lugardestino":"Rusia",
+      "id_exportador":1,
+      "id_importador":1,
+      "id_operador":1,*****
+      "id_agencia_aduana":1,******
+      "tipo_documento":"0",
+      "documento":"excel",
+      "motonave":"motonave",
+      "viaje":"viaje",
+      "naviera":"naviera",
+      "reserva":"reserva",
+      "valor_cif":2312,
+      "deposito_contenedores":"deposito",
+      "cont_tipo":"grande",
+      "sello":"sello",
+      "contenedor":null,
+      "cant_bultos":null,
+      "peso":null,
+      "volumen":null,
+
+      "mercancias":null
+      "transbordos":null
+}

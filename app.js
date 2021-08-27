@@ -13,6 +13,7 @@ var shipmentRouter = require("./routes/shipment");
 var misionsRouter = require("./routes/misions");
 var authRouter = require("./routes/auth");
 var dashboardRouter = require("./routes/dashboard");
+var portsRouter = require("./routes/ports");
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use("/shipment", shipmentRouter);
 app.use("/mision", misionsRouter);
 app.use("/auth", authRouter);
 app.use("/dashboard", dashboardRouter);
+app.use("/port", portsRouter);
 
 app.listen(port, () => {
   console.log(`Shipment Backend initialized puerto: ${port}`);

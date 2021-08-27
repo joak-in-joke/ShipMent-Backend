@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       CuentaBanco.belongsTo(models.ProveedorCliente, {
-        foreignKey: "id_proveedore_cliente",
+        foreignKey: "id_proveedor_cliente",
       });
     }
   }

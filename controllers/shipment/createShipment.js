@@ -14,14 +14,13 @@ var DataFCL = models.DataFCL;
 const getShipment = async (req, res = response) => {
   var {
     n_operacion,
+    tipo_operacion,
     medio_transporte,
     eta,
     etd,
-    estado,
     referencia,
-    tipoOperacion,
-    intercom,
-    id_puertoembarque,
+    incoterm,
+    id_puerto_embarque,
     id_operador,
     id_importador,
     id_exportador,
@@ -31,19 +30,25 @@ const getShipment = async (req, res = response) => {
     motonave,
     viaje,
     naviera,
-    transbordo,
     reserva,
     valor_cif,
-    fcl,
-    lcl,
-    mercancias,
-    transbordos,
+    id_puerto_destino,
+    lugardestino,
+    deposito_contenedores,
+    cont_tipo,
+    sello,
+    contenedor,
+    cant_bultos,
+    peso,
+    volumen,
+    mercancias, // array
+    transbordos, //array
   } = req.body;
   try {
     const newShipment = await Embarque.create(
       {
         n_operacion,
-        estado,
+        estado: 1,
         referencia,
         etd,
         eta,
@@ -65,19 +70,19 @@ const getShipment = async (req, res = response) => {
     const newDataShipment = DataEmbarque.create(
       {
         id_embarque: newShipment.id,
-        id_puerto_embarque: id_puertoembarque,
+        id_puerto_embarque: id_puerto_embarque,
         id_exportador: id_importador,
         id_importador: id_exportador,
         id_operador: id_operador,
         id_agencia: id_agencia_aduana,
-        tipo_operacion: tipoOperacion,
-        incoterm: intercom,
+        tipo_operacion: tipo_operacion,
+        incoterm: incoterm,
         tipo_documento: tipo_documento,
         documento: documento,
         motonave: motonave,
         viaje: viaje,
         naviera: naviera,
-        transbordo: transbordo,
+        transbordo: transbordos ? true : false,
         reserva: reserva,
         valor_cif: valor_cif,
       },
@@ -119,7 +124,7 @@ const getShipment = async (req, res = response) => {
         id_data: newDataShipment.id,
         id_puerto_transbordo: item.id_puerto_transbordo,
         naver_transb: item.naver_transb,
-        fecha_transb: item.fecha_transb,
+        fecha_transb: item.fecha,
       });
     });
 
@@ -127,22 +132,22 @@ const getShipment = async (req, res = response) => {
       case "FCL":
         DataFCL.create({
           id_data: newDataShipment.id,
-          id_puerto_destino: fcl.id_puerto_destino,
-          deposito_contenedores: fcl.deposito_contenedores,
-          cont_tipo: fcl.cont_tipo,
-          sello: fcl.sello,
-          lugar_destino: fcl.lugar_destino,
+          id_puerto_destino: id_puerto_destino,
+          deposito_contenedores: deposito_contenedores,
+          cont_tipo: cont_tipo,
+          sello: sello,
+          lugar_destino: lugardestino,
         });
         break;
       case "LCL":
         DataLCL.create({
           id_data: newDataShipment.id,
-          id_puerto_transbordo: lcl.id_puerto_transbordo,
-          contenedor: lcl.contenedor,
-          cant_bultos: lcl.cant_bultos,
-          peso: lcl.peso,
-          volumen: lcl.volumen,
-          lugar_destino: lcl.lugar_destino,
+          id_puerto_destino: id_puerto_destino,
+          contenedor: contenedor,
+          cant_bultos: cant_bultos,
+          peso: peso,
+          volumen: volumen,
+          lugar_destino: lugardestino,
         });
         break;
     }

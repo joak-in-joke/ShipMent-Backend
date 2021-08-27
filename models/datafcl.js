@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       DataFCL.belongsTo(models.Puerto, {
         foreignKey: "id_puerto_destino",
       });
-      DataFCL.belongsTo(models.DataEmbarques, {
+      DataFCL.belongsTo(models.DataEmbarque, {
         foreignKey: "id_data",
         onDelete: "CASCADE",
       });

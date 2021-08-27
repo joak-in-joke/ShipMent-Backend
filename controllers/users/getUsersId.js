@@ -27,7 +27,7 @@ const getUsersId = async (req, res = response) => {
     res.json({ resultado: true, user });
   } catch (error) {
     console.log(error);
-    res.status(400).json({ resultado: false, message: error });
+    res.status.json({ resultado: false, message: error });
   }
 };
 

@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ValorData.belongsTo(models.DataEmbarques, {
+      ValorData.belongsTo(models.DataEmbarque, {
         foreignKey: "id_data",
         onDelete: "CASCADE",
       });

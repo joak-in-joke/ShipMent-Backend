@@ -25,7 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "UsuarioProvClis",
+      modelName: "UsuarioProvCli",
+      paranoid: true,
     }
   );
   return UsuarioProvCli;

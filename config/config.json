@@ -4,23 +4,20 @@
     "password": "qwerty",
     "database": "shipment_development",
     "host": "127.0.0.1",
-    "dialect": "postgres",
-    "minifyAliases": "true"
+    "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "qwerty",
     "database": "shipment_test",
     "host": "127.0.0.1",
-    "dialect": "postgres",
-    "minifyAliases": "true"
+    "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": "qwerty",
     "database": "shipment_production",
     "host": "127.0.0.1",
-    "dialect": "postgres",
-    "minifyAliases": "true"
+    "dialect": "postgres"
   }
 }

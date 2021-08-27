@@ -8,11 +8,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ComentariosLTiempo.belongsTo(models.Usuarios, {
+      ComentariosLTiempo.belongsTo(models.Usuario, {
         foreignKey: "id_usuario",
         onDelete: "CASCADE",
       });
-      ComentariosLTiempo.belongsTo(models.LineaDeTiempos, {
+      ComentariosLTiempo.belongsTo(models.LineaDeTiempo, {
         foreignKey: "id_linea_tiempo",
       });
     }

@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("CuentaBanco", {
+    await queryInterface.createTable("CuentaBancos", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,7 +11,7 @@ module.exports = {
       id_proveedor_cliente: {
         type: Sequelize.INTEGER,
         references: {
-          model: "ProveedorCliente",
+          model: "ProveedorClientes",
           key: "id",
           as: "id_proveedor_cliente",
         },
@@ -49,6 +49,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("CuentaBanco");
+    await queryInterface.dropTable("CuentaBancos");
   },
 };

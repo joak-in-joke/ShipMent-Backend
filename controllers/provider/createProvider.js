@@ -14,6 +14,7 @@ const createProvider = async (req, res = response) => {
         email,
         n_cuenta,
         email_cuentabanco,
+        banco,
         rut_cuentabanco,
         nombre_empresa,
         tipo_de_cuenta,
@@ -56,6 +57,7 @@ const createProvider = async (req, res = response) => {
                     rut: rut_cuentabanco,
                     nombre_empresa,
                     tipo_de_cuenta,
+                    banco,
                 },
                 {
                     fields: [
@@ -65,19 +67,20 @@ const createProvider = async (req, res = response) => {
                         "rut",
                         "nombre_empresa",
                         "tipo_de_cuenta",
+                        "banco",
                     ]
                 }
             );
             Contacto.create(
                 {
                     id_proveedor_cliente: newProveedorCliente.id,
-                    nombre_contacto,
+                    nombre: nombre_contacto,
                     cargo,
                 },
                 {
                     fields: [
                         "id_proveedor_cliente",
-                        "nombre_contacto",
+                        "nombre",
                         "cargo",
                     ]
                 }

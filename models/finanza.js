@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       Finanza.hasMany(models.ItemFinanza, {
         foreignKey: "id_finanza",
       });
-      Finanza.belongsTo(models.DataEmbarques, {
+      Finanza.belongsTo(models.DataEmbarque, {
         foreignKey: "id_embarque",
         onDelete: "CASCADE",
       });

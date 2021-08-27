@@ -19,7 +19,7 @@ module.exports = {
       id_proveedor: {
         type: Sequelize.INTEGER,
         references: {
-          model: "ProveedorClientes",
+          model: "ProveedorCliente",
           key: "id",
           as: "id_proveedor",
         },

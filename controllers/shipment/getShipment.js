@@ -10,6 +10,7 @@ var AgenciaAduana = models.AgenciaAduana;
 var ValorData = models.ValorData;
 var DataLCL = models.DataLCL;
 var DataFCL = models.DataFCL;
+var ProveedorCliente = models.ProveedorCliente;
 
 const getShipment = async (req, res = response) => {
   var id = req.params.id;
@@ -48,17 +49,17 @@ const getShipment = async (req, res = response) => {
         },
       ],
     });
+    const Exportador = await ProveedorCliente.findOne({
+      where: { id: Shipment.DataEmbarque.id_exportador },
+    });
+    const Importador = await ProveedorCliente.findOne({
+      where: { id: Shipment.DataEmbarque.id_importador },
+    });
 
-    // switch (Shipment.media_transporte) {
-    //   case "FCL":
-    //     mediaData = DataFCL.findOne({ where: { id_data: Shipment.id } });
-    //     break;
-    //   case "LCL":
-    //     mediaData = DataFCL.findOne({ where: { id_data: Shipment.id } });
-    //     break;
-    // }
-
-    res.json({ resultado: true, data: { Shipment, mediaData } });
+    res.json({
+      resultado: true,
+      data: { Shipment, Exp: Exportador, Imp: Importador },
+    });
   } catch (error) {
     console.log(error);
     res.status.json({ resultado: false, message: error });

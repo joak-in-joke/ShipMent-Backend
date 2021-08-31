@@ -49,16 +49,16 @@ const getShipment = async (req, res = response) => {
         },
       ],
     });
-    const Exportador = await ProveedorCliente.findOne({
-      where: { id: Shipment.DataEmbarque.id_exportador },
-    });
-    const Importador = await ProveedorCliente.findOne({
-      where: { id: Shipment.DataEmbarque.id_importador },
-    });
+    // const Exportador = await ProveedorCliente.findOne({
+    //   where: { id: Shipment.DataEmbarque.id_exportador },
+    // });
+    // const Importador = await ProveedorCliente.findOne({
+    //   where: { id: Shipment.DataEmbarque.id_importador },
+    // });
 
     res.json({
       resultado: true,
-      data: { Shipment, Exp: Exportador, Imp: Importador },
+      data: { Shipment },
     });
   } catch (error) {
     console.log(error);

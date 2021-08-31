@@ -10,6 +10,7 @@ var AgenciaAduana = models.AgenciaAduana;
 var ProveedorCliente = models.ProveedorCliente;
 var DataLCL = models.DataLCL;
 var DataFCL = models.DataFCL;
+var ValorData = models.ValorData;
 
 const createShipment = async (req, res = response) => {
   var {

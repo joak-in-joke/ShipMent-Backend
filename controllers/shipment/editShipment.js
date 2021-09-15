@@ -8,13 +8,14 @@ var Puerto = models.Puerto;
 var OperadorLogistico = models.OperadorLogistico;
 var AgenciaAduana = models.AgenciaAduana;
 var ProveedorCliente = models.ProveedorCliente;
-var ValorData = models.ValorData;
 var DataLCL = models.DataLCL;
 var DataFCL = models.DataFCL;
 var ValorData = models.ValorData;
 
-const createShipment = async (req, res = response) => {
+const updateShipment = async (req, res = response) => {
   var {
+    id,
+    estado,
     n_operacion,
     tipo_operacion,
     medio_transporte,
@@ -47,31 +48,20 @@ const createShipment = async (req, res = response) => {
     transbordos, //array
   } = req.body;
   try {
-    const newShipment = await Embarque.create(
+    const Shipment = await Embarque.update(
       {
         n_operacion,
-        estado: 1,
+        estado,
         referencia,
         etd,
         eta,
         media_transporte: medio_transporte,
       },
-      {
-        fields: [
-          "n_operacion",
-          "estado",
-          "referencia",
-          "etd",
-          "eta",
-          "media_transporte",
-        ],
-        attributes: ["id"],
-      }
+      { where: { id } }
     );
 
-    const newDataShipment = await DataEmbarque.create(
+    await DataEmbarque.update(
       {
-        id_embarque: newShipment.id,
         id_puerto_embarque: id_puerto_embarque,
         id_exportador: id_importador,
         id_importador: id_exportador,
@@ -84,38 +74,25 @@ const createShipment = async (req, res = response) => {
         motonave: motonave,
         viaje: viaje,
         naviera: naviera,
-        transbordo: transbordos ? true : false,
         reserva: reserva,
         valor_cif: valor_cif,
       },
-      {
-        fields: [
-          "id_embarque",
-          "id_puerto_embarque",
-          "id_exportador",
-          "id_importador",
-          "id_operador",
-          "id_agencia",
-          "tipo_operacion",
-          "incoterm",
-          "tipo_documento",
-          "documento",
-          "motonave",
-          "viaje",
-          "naviera",
-          "transbordo",
-          "reserva",
-          "valor_cif",
-        ],
-        attributes: ["id"],
-      }
+      { where: { id_embarque: id } },
+      { attributes: ["id"] }
     );
 
+    const DataShipment = await DataEmbarque.findOne({
+      where: { id_embarque: id },
+    });
+
+    await ValorData.destroy({
+      where: { id_data: DataShipment.id },
+    });
     if (mercancias) {
       mercancias.map((item) => {
         ValorData.create(
           {
-            id_data: newDataShipment.id,
+            id_data: DataShipment.id,
             nombre_mercancia: item.nombre_mercancia,
             valor_usd: item.valor_usd,
             flete_usd: item.flete_usd,
@@ -134,11 +111,15 @@ const createShipment = async (req, res = response) => {
         );
       });
     }
+
+    await TransbordoData.destroy({
+      where: { id_data: DataShipment.id },
+    });
     if (transbordos) {
-      transbordos.map((item) => {
+      await transbordos.map((item) => {
         TransbordoData.create(
           {
-            id_data: newDataShipment.id,
+            id_data: DataShipment.id,
             id_puerto_transbordo: item.id_puerto_transbordo,
             naver_transb: item.naver_transb,
             fecha_transb: item.fecha,
@@ -158,9 +139,9 @@ const createShipment = async (req, res = response) => {
 
     switch (medio_transporte) {
       case "FCL":
-        await DataFCL.create(
+        await DataFCL.update(
           {
-            id_data: newDataShipment.id,
+            id_data: DataShipment.id,
             id_puerto_destino: id_puerto_destino,
             deposito_contenedores: deposito_contenedores,
             cont_tipo: cont_tipo,
@@ -168,22 +149,16 @@ const createShipment = async (req, res = response) => {
             lugar_destino: lugardestino,
           },
           {
-            fields: [
-              "id_data",
-              "id_puerto_destino",
-              "deposito_contenedores",
-              "cont_tipo",
-              "sello",
-              "lugar_destino",
-            ],
-            attributes: ["id"],
+            where: {
+              id_data: DataShipment.id,
+            },
           }
         );
         break;
       case "LCL":
-        await DataLCL.create(
+        await DataLCL.update(
           {
-            id_data: newDataShipment.id,
+            id_data: DataShipment.id,
             id_puerto_destino: id_puerto_destino,
             contenedor: contenedor,
             cant_bultos: cant_bultos,
@@ -192,16 +167,7 @@ const createShipment = async (req, res = response) => {
             lugar_destino: lugardestino,
           },
           {
-            fields: [
-              "id_data",
-              "id_puerto_destino",
-              "contenedor",
-              "cant_bultos",
-              "peso",
-              "volumen",
-              "lugar_destino",
-            ],
-            attributes: ["id"],
+            where: { id_data: DataShipment.id },
           }
         );
         break;
@@ -214,4 +180,4 @@ const createShipment = async (req, res = response) => {
   }
 };
 
-module.exports = createShipment;
+module.exports = updateShipment;

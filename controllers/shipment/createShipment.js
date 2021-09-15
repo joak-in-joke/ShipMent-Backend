@@ -8,6 +8,7 @@ var Puerto = models.Puerto;
 var OperadorLogistico = models.OperadorLogistico;
 var AgenciaAduana = models.AgenciaAduana;
 var ProveedorCliente = models.ProveedorCliente;
+var ValorData = models.ValorData;
 var DataLCL = models.DataLCL;
 var DataFCL = models.DataFCL;
 
